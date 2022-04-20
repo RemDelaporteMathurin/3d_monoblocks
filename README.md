@@ -30,6 +30,12 @@ pip install meshio[all]
 
 ## 3. Run FESTIM 
 
+Install the dev version of FESTIM:
+
+```
+pip install git+https://github.com/RemDelaporteMathurin/FESTIM@dev
+```
+
 To run the FESTIM simulation:
 
 ```
