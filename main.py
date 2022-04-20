@@ -1,5 +1,4 @@
 import FESTIM as F
-from numpy import isin
 
 import properties
 
@@ -90,17 +89,25 @@ my_model.T = F.HeatTransferProblem(transient=False)
 
 
 # boundary conditions
-heat_transfer_bcs = [
-    F.FluxBC(surfaces=id_W_top, value=10e6, field="T"),
-    F.ConvectiveFlux(h_coeff=7e04, T_ext=323, surfaces=id_coolant),
-]
+heat_flux_top = F.FluxBC(surfaces=id_W_top, value=10e6, field="T")
+convective_heat_flux_coolant = F.ConvectiveFlux(
+    h_coeff=7e04, T_ext=323, surfaces=id_coolant
+)
+
+heat_transfer_bcs = [heat_flux_top, convective_heat_flux_coolant]
+
+instantaneous_recombination_lateral = F.DirichletBC(value=0, surfaces=id_lateral)
+recombination_flux_coolant = F.RecombinationFlux(
+    Kr_0=2.9e-14, E_Kr=1.92, order=2, surfaces=id_coolant
+)
+h_implantation_top = F.ImplantationDirichlet(
+    surfaces=id_W_top, phi=1.61e22, R_p=9.52e-10, D_0=4.1e-7, E_D=0.39
+)
 
 h_transport_bcs = [
-    F.ImplantationDirichlet(
-        surfaces=id_W_top, phi=1.61e22, R_p=9.52e-10, D_0=4.1e-7, E_D=0.39
-    ),
-    F.RecombinationFlux(Kr_0=2.9e-14, E_Kr=1.92, order=2, surfaces=id_coolant),
-    F.DirichletBC(value=0, surfaces=id_lateral),
+    h_implantation_top,
+    recombination_flux_coolant,
+    instantaneous_recombination_lateral,
 ]
 
 
@@ -115,23 +122,9 @@ my_model.settings = F.Settings(
     transient=False,
 )
 
-# parametric study thickness
-for thickness in [4, 5, 6, 7, 8, 9, 10]:
+if __name__ == "__main__":
 
-    print("\n Running for {} mm \n".format(thickness))
-
-    folder = "meshes/{}mm_thickness".format(thickness)
-    my_model.mesh = F.MeshFromXDMF(
-        volume_file="{}/mesh_cells.xdmf".format(folder),
-        boundary_file="{}/mesh_facets.xdmf".format(folder),
-    )
-
-    my_model.exports = F.Exports(
-        [
-            F.XDMFExport("T", folder="results/{}mm_thickness".format(thickness)),
-            F.XDMFExport("solute", folder="results/{}mm_thickness".format(thickness)),
-        ]
-    )
+    my_model.exports = F.Exports([F.XDMFExport("T"), F.XDMFExport("solute")])
 
     my_model.initialise()
     my_model.run()
