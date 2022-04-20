@@ -15,6 +15,12 @@ This will create a brep file.
 
 Load `mesh_with_salome.py` (with the right paths) in SALOME.
 
+Alternatively, run:
+
+```
+C:\SALOME-9.6.0\run_salome.bat -t mesh_with_salome.py
+```
+
 This will create a .med file.
 
 Then to convert the .med file in .xdmf files (readable by FESTIM), run:
