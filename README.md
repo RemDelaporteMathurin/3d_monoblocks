@@ -13,13 +13,11 @@ This will create a brep file.
 
 ## 2. Mesh
 
-Load `mesh_with_salome.py` (with the right paths) in SALOME.
-
-Alternatively, run:
-
+To mesh the brep files, run:
 ```
 C:\SALOME-9.6.0\run_salome.bat -t mesh_with_salome.py
 ```
+You may need to replace the path to `run_salome.bat`.
 
 This will create a .med file.
 
