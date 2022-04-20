@@ -31,9 +31,7 @@ for thickness in [4, 5, 6, 7, 8, 9, 10]:
     OY = geompy.MakeVectorDXDYDZ(0, 1, 0)
     OZ = geompy.MakeVectorDXDYDZ(0, 0, 1)
     geom_brep_1 = geompy.ImportBREP(
-        "D:/3d_monoblocks/meshes/{}mm_thickness/monoblock_{}mm_thickness.brep".format(
-            thickness, thickness
-        )
+        "{}mm_thickness/monoblock_{}mm_thickness.brep".format(thickness, thickness)
     )
     scaled_geometry = geompy.MakeScaleTransform(geom_brep_1, None, 0.001)
 
@@ -130,9 +128,7 @@ for thickness in [4, 5, 6, 7, 8, 9, 10]:
 
     try:
         Mesh_1.ExportMED(
-            "D:/3d_monoblocks/meshes/{}mm_thickness/mesh_3D_{}mm_auto.med".format(
-                thickness, thickness
-            ),
+            "{}mm_thickness/mesh_3D_{}mm_auto.med".format(thickness, thickness),
             auto_groups=0,
             version=41,
             overwrite=1,
