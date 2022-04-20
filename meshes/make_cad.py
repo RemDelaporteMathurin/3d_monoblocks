@@ -131,7 +131,7 @@ def export_brep(shapes: list, path_filename: str):
 if __name__ == "__main__":
     thickness = 4
 
-    for thickness in [4, 5, 6, 7, 8, 9, 10]:
+    for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
         print(thickness)
         tungsten, cucrzr, cu = monoblock(
             thickness=thickness,

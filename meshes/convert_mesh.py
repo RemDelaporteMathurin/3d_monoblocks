@@ -45,7 +45,7 @@ def convert_med_to_xdmf(
 
 
 if __name__ == "__main__":
-    for thickness in [4, 5, 6, 7, 8, 9, 10]:
+    for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
         folder = "{}mm_thickness".format(thickness)
         correspondance_dict, cell_data_types = convert_med_to_xdmf(
             medfilename="{}/mesh_3D_{}mm_auto.med".format(folder, thickness),

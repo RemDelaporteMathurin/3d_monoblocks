@@ -22,7 +22,7 @@ from salome.geom import geomBuilder
 import math
 import SALOMEDS
 
-for thickness in [4, 5, 6, 7, 8, 9, 10]:
+for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
 
     geompy = geomBuilder.New()
 
