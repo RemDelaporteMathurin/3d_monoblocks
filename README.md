@@ -32,7 +32,13 @@ If needed, install [meshio](https://github.com/nschloe/meshio) with:
 pip install meshio[all]
 ```
 
-## 3. Run FESTIM 
+## 3. Run FESTIM
+
+Run a FEniCS container:
+
+```
+docker run -ti -v ${PWD}:/home/ quay.io/fenicsproject/stable:latest
+```
 
 Install the dev version of FESTIM:
 
