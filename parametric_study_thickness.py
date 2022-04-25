@@ -3,7 +3,10 @@ from main import (
     heat_transfer_bcs,
     h_implantation_top,
     recombination_flux_coolant,
-    instantaneous_recombination_lateral,
+    instantaneous_recombination_poloidal,
+    instantaneous_recombination_top_pipe,
+    instantaneous_recombination_bottom,
+    instantaneous_recombination_toroidal,
     tungsten,
     copper,
     cucrzr
@@ -39,7 +42,10 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool):
             F.TotalVolume(field="retention", volume=copper.id),
             F.TotalVolume(field="retention", volume=cucrzr.id),
             F.SurfaceFlux(field="solute", surface=recombination_flux_coolant.surfaces[0]),
-            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_lateral.surfaces[0]),
+            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_poloidal.surfaces[0]),
+            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_top_pipe.surfaces[0]),
+            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_bottom.surfaces[0]),
+            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_toroidal.surfaces[0]),
         ],
         filename="{}/derived_quantities.csv".format(folder),
     )
@@ -53,14 +59,20 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool):
         ]
     )
 
-    h_transport_bcs = [h_implantation_top, recombination_flux_coolant]
+    h_transport_bcs = [recombination_flux_coolant]
     my_model.boundary_conditions = heat_transfer_bcs + h_transport_bcs
 
-    if instant_recomb:
-        my_model.boundary_conditions.append(instantaneous_recombination_lateral)
+    my_model.boundary_conditions.append(instantaneous_recombination_toroidal)
 
+    if instant_recomb:
+        my_model.boundary_conditions.append(instantaneous_recombination_poloidal)
+        # my_model.boundary_conditions.append(instantaneous_recombination_bottom)
+        my_model.boundary_conditions.append(instantaneous_recombination_top_pipe)
+
+    my_model.boundary_conditions.append(h_implantation_top)  # add it at the end
 
     if transient:
+        my_model.t = 0
         my_model.dt = F.Stepsize(initial_value=1e4, stepsize_change_ratio=1.1)
         my_model.settings.transient = True
         my_model.settings.final_time = 1e4
@@ -75,7 +87,7 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool):
 
 
 # parametric study thickness
-for instant_recomb in [True, False]:
-    for transient in [True, False]:
-        for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
-            run_mb(thickness, instant_recomb=False, transient=True)
+for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
+    for transient in [True]:
+        for instant_recomb in [True, False]:
+                run_mb(thickness, instant_recomb=instant_recomb, transient=transient)
