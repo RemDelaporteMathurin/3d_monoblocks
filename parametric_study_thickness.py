@@ -4,6 +4,9 @@ from main import (
     h_implantation_top,
     recombination_flux_coolant,
     instantaneous_recombination_lateral,
+    tungsten,
+    copper,
+    cucrzr
 )
 import FESTIM as F
 
@@ -22,8 +25,24 @@ def run_mb(thickness: float, instant_recomb: bool):
     else:
         folder = "results/{}mm_thickness/no_recomb".format(thickness)
 
+    derived_quantities = F.DerivedQuantities(
+        [
+            F.TotalVolume(field="retention", volume=tungsten.id),
+            F.TotalVolume(field="retention", volume=copper.id),
+            F.TotalVolume(field="retention", volume=cucrzr.id),
+            F.SurfaceFlux(field="solute", surface=recombination_flux_coolant.surfaces[0]),
+            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_lateral.surfaces[0]),
+        ],
+        filename="{}/derived_quantities.csv".format(folder),
+    )
+
     my_model.exports = F.Exports(
-        [F.XDMFExport("T", folder=folder), F.XDMFExport("solute", folder=folder)]
+        [
+            derived_quantities,
+            F.XDMFExport("T", folder=folder),
+            F.XDMFExport("solute", folder=folder),
+            F.XDMFExport("retention", folder=folder),
+        ]
     )
 
     h_transport_bcs = [h_implantation_top, recombination_flux_coolant]
