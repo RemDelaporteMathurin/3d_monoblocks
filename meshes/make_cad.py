@@ -4,6 +4,7 @@
 import cadquery as cq
 import OCP
 
+import os
 
 # construction
 
@@ -107,6 +108,10 @@ def export_brep(shapes: list, path_filename: str):
         shapes (list): list of cadquery shapes
         path_filename (str): the filename must end with .brep
     """
+
+    dirname = os.path.dirname(path_filename)
+    if not os.path.exists(dirname):
+        os.makedirs(dirname, exist_ok=True)
 
     bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
 
