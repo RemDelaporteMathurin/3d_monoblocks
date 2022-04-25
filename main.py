@@ -55,34 +55,10 @@ cucrzr = F.Material(
 my_model.materials = F.Materials([tungsten, copper, cucrzr])
 
 # traps
-my_model.traps = F.Traps([])
-
-
-# traps = [
-
-#     {
-#         # W_1
-#         "k_0": 8.96e-17,
-#         "E_k": 0.39,
-#         "p_0": 1e13,
-#         "E_p": 0.87,
-#         "density": 1.3e-3*atom_density_W,
-#         "materials": id_W,
-#     },
-#     {
-#         # conglomérat de piège W_2, piège Cu, piège CuCrZr          # à mettre en commentaire si utilisation des propriétés des MTX indépendemment
-#         # permet de réduire le temps de calcul voir PR#291
-#         "k_0": [8.96e-17, 6e-17, 1.2e-16],
-#         "E_k": [0.39, 0.39, 0.42],
-#         "p_0": [1e13, 8e13, 8e13],
-#         "E_p": [1.0, 0.5, 0.85],
-#         "density": [4e-4*atom_density_W, 5e-5*atom_density_Cu, 5e-5*atom_density_CuCrZr],
-#         "materials": [id_W, id_Cu, id_CuCrZr],
-#     },
-
-# ]
-
-# parameters["traps"] = traps
+my_model.traps = F.Traps([
+    F.Trap(k_0=8.96e-17, E_k=0.39, p_0=1e13, E_p=0.87, density=1.3e-3*properties.atom_density_W, materials=tungsten),
+    F.Trap(k_0=[8.96e-17, 6e-17, 1.2e-16], E_k=[0.39, 0.39, 0.42], p_0=[1e13, 8e13, 8e13], E_p=[1.0, 0.5, 0.85], density=[4e-4*properties.atom_density_W, 5e-5*properties.atom_density_Cu, 5e-5*properties.atom_density_CuCrZr], materials=[tungsten, copper, cucrzr]),
+])
 
 # temperature
 my_model.T = F.HeatTransferProblem(transient=False)
@@ -124,7 +100,15 @@ my_model.settings = F.Settings(
 
 if __name__ == "__main__":
 
-    my_model.exports = F.Exports([F.XDMFExport("T"), F.XDMFExport("solute")])
+    derived_quantities = F.DerivedQuantities([
+        F.TotalVolume(field="retention", volume=id_W),
+        F.TotalVolume(field="retention", volume=id_Cu),
+        F.TotalVolume(field="retention", volume=id_CuCrZr),
+        F.SurfaceFlux(field="solute", surface=id_coolant),
+        F.SurfaceFlux(field="solute", surface=id_lateral),
+    ], filename="./derived_quantities.csv")
+
+    my_model.exports = F.Exports([derived_quantities, F.XDMFExport("T"), F.XDMFExport("solute"), F.XDMFExport("retention")])
 
     my_model.initialise()
     my_model.run()
