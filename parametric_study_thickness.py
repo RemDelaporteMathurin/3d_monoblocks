@@ -11,8 +11,8 @@ from main import (
 import FESTIM as F
 
 
-def run_mb(thickness: float, instant_recomb: bool):
-    print("\n Running for {} mm \n".format(thickness))
+def run_mb(thickness: float, instant_recomb: bool, transient: bool):
+    print("\n Running for {} mm  Transient: {} Recomb: {} \n".format(thickness, transient, instant_recomb))
 
     folder = "meshes/{}mm_thickness".format(thickness)
     my_model.mesh = F.MeshFromXDMF(
@@ -20,10 +20,18 @@ def run_mb(thickness: float, instant_recomb: bool):
         boundary_file="{}/mesh_facets.xdmf".format(folder),
     )
 
-    if instant_recomb:
-        folder = "results/{}mm_thickness/instant_recomb".format(thickness)
+    folder = "results/{}mm_thickness".format(thickness)
+    if transient:
+        folder += "/transient"
     else:
-        folder = "results/{}mm_thickness/no_recomb".format(thickness)
+        folder += "/steady_state"
+
+    if instant_recomb:
+        folder += "/instant_recomb"
+    else:
+        folder += "/no_recomb"
+
+    print(folder)
 
     derived_quantities = F.DerivedQuantities(
         [
@@ -51,11 +59,23 @@ def run_mb(thickness: float, instant_recomb: bool):
     if instant_recomb:
         my_model.boundary_conditions.append(instantaneous_recombination_lateral)
 
+
+    if transient:
+        my_model.dt = F.Stepsize(initial_value=1e4, stepsize_change_ratio=1.1)
+        my_model.settings.transient = True
+        my_model.settings.final_time = 1e4
+    else:
+        my_model.dt = None
+        my_model.settings.transient = False
+        my_model.settings.final_time = None
+
+
     my_model.initialise()
     my_model.run()
 
 
 # parametric study thickness
 for instant_recomb in [True, False]:
-    for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
-        run_mb(thickness, instant_recomb=instant_recomb)
+    for transient in [True, False]:
+        for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
+            run_mb(thickness, instant_recomb=False, transient=True)
