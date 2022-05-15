@@ -45,13 +45,13 @@ with plt.style.context(matplotx.styles.dufte):
     # plt.plot(t, flux_bottom, label="Bottom")
     plt.plot(t, flux_retro, label="Top surface \n (retro-desorbed)")
 
+    plt.xscale("log")
     plt.yscale("log")
 
     matplotx.line_labels()
-    matplotx.ylabel_top("Desorption \n flux (H/s)")
-    plt.ticklabel_format(axis="x", style="sci", scilimits=(0, 0))
+    # plt.ticklabel_format(axis="x", style="sci", scilimits=(0, 0))
     plt.xlabel("Time (s)")
     plt.ylim(top=1e19)
-    plt.xlim(left=0)
+    matplotx.ylabel_top("Desorption \n flux (H/s)")
     plt.tight_layout()
     plt.show()
