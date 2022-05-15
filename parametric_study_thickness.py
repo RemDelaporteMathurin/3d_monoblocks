@@ -9,13 +9,17 @@ from main import (
     instantaneous_recombination_toroidal,
     tungsten,
     copper,
-    cucrzr
+    cucrzr,
 )
 import FESTIM as F
 
 
 def run_mb(thickness: float, instant_recomb: bool, transient: bool):
-    print("\n Running for {} mm  Transient: {} Recomb: {} \n".format(thickness, transient, instant_recomb))
+    print(
+        "\n Running for {} mm  Transient: {} Recomb: {} \n".format(
+            thickness, transient, instant_recomb
+        )
+    )
 
     folder = "meshes/{}mm_thickness".format(thickness)
     my_model.mesh = F.MeshFromXDMF(
@@ -41,11 +45,24 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool):
             F.TotalVolume(field="retention", volume=tungsten.id),
             F.TotalVolume(field="retention", volume=copper.id),
             F.TotalVolume(field="retention", volume=cucrzr.id),
-            F.SurfaceFlux(field="solute", surface=recombination_flux_coolant.surfaces[0]),
-            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_poloidal.surfaces[0]),
-            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_top_pipe.surfaces[0]),
-            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_bottom.surfaces[0]),
-            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_toroidal.surfaces[0]),
+            F.TotalVolume(field="solute", volume=tungsten.id),
+            F.TotalVolume(field="solute", volume=copper.id),
+            F.TotalVolume(field="solute", volume=cucrzr.id),
+            F.SurfaceFlux(
+                field="solute", surface=recombination_flux_coolant.surfaces[0]
+            ),
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_poloidal.surfaces[0]
+            ),
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_top_pipe.surfaces[0]
+            ),
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_bottom.surfaces[0]
+            ),
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_toroidal.surfaces[0]
+            ),
         ],
         filename="{}/derived_quantities.csv".format(folder),
     )
@@ -81,7 +98,6 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool):
         my_model.settings.transient = False
         my_model.settings.final_time = None
 
-
     my_model.initialise()
     my_model.run()
 
@@ -90,4 +106,4 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool):
 for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
     for transient in [True]:
         for instant_recomb in [True, False]:
-                run_mb(thickness, instant_recomb=instant_recomb, transient=transient)
+            run_mb(thickness, instant_recomb=instant_recomb, transient=transient)
