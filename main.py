@@ -126,7 +126,7 @@ my_model.settings = F.Settings(
     traps_element_type="DG",
     chemical_pot=True,
     transient=False,
-    # linear_solver="mumps",
+    linear_solver="mumps",
 )
 
 if __name__ == "__main__":
