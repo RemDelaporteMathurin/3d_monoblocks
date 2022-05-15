@@ -9,7 +9,7 @@ from main import (
     instantaneous_recombination_toroidal,
     tungsten,
     copper,
-    cucrzr
+    cucrzr,
 )
 
 import FESTIM as F
@@ -27,6 +27,7 @@ def add_bcs(model: F.Simulation, recomb: bool):
 
     model.boundary_conditions = heat_transfer_bcs + h_transport_bcs
 
+
 def add_exports(model: F.Simulation, recomb: bool):
     folder = "standard_case"
 
@@ -42,11 +43,21 @@ def add_exports(model: F.Simulation, recomb: bool):
             F.TotalVolume(field="retention", volume=tungsten.id),
             F.TotalVolume(field="retention", volume=copper.id),
             F.TotalVolume(field="retention", volume=cucrzr.id),
-            F.SurfaceFlux(field="solute", surface=recombination_flux_coolant.surfaces[0]),
-            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_poloidal.surfaces[0]),
-            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_top_pipe.surfaces[0]),
-            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_bottom.surfaces[0]),
-            F.SurfaceFlux(field="solute", surface=instantaneous_recombination_toroidal.surfaces[0]),
+            F.SurfaceFlux(
+                field="solute", surface=recombination_flux_coolant.surfaces[0]
+            ),
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_poloidal.surfaces[0]
+            ),
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_top_pipe.surfaces[0]
+            ),
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_bottom.surfaces[0]
+            ),
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_toroidal.surfaces[0]
+            ),
         ],
         filename="{}/derived_quantities.csv".format(folder),
     )
@@ -60,8 +71,9 @@ def add_exports(model: F.Simulation, recomb: bool):
         ]
     )
 
+
 my_model.settings.transient = True
-my_model.settings.final_time = 1e5
+my_model.settings.final_time = 1e6
 
 # with instantaneous recombination
 my_model.t = 0
