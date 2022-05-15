@@ -23,6 +23,7 @@ import math
 import SALOMEDS
 
 for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
+    print("Meshing thickness {} mm".format(thickness))
 
     geompy = geomBuilder.New()
 
@@ -102,18 +103,10 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
     cooling_surface_1 = Mesh_1.GroupOnGeom(
         cooling_surface, "cooling_surface", SMESH.FACE
     )
-    poloidal_gap_1 = Mesh_1.GroupOnGeom(
-        poloidal_gap, "poloidal_gap", SMESH.FACE
-    )
-    face_top_pipe_1 = Mesh_1.GroupOnGeom(
-        face_top_pipe, "face_top_pipe", SMESH.FACE
-    )
-    toroidal_gap_1 = Mesh_1.GroupOnGeom(
-        toroidal_gap, "toroidal_gap", SMESH.FACE
-    )
-    bottom_1 = Mesh_1.GroupOnGeom(
-        bottom, "bottom", SMESH.FACE
-    )
+    poloidal_gap_1 = Mesh_1.GroupOnGeom(poloidal_gap, "poloidal_gap", SMESH.FACE)
+    face_top_pipe_1 = Mesh_1.GroupOnGeom(face_top_pipe, "face_top_pipe", SMESH.FACE)
+    toroidal_gap_1 = Mesh_1.GroupOnGeom(toroidal_gap, "toroidal_gap", SMESH.FACE)
+    bottom_1 = Mesh_1.GroupOnGeom(bottom, "bottom", SMESH.FACE)
 
     NETGEN_3D_Parameters_1.SetFineness(5)
     NETGEN_3D_Parameters_1.SetGrowthRate(0.05)
@@ -122,7 +115,7 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
     NETGEN_3D_Parameters_1.SetCheckChartBoundary(0)
     NETGEN_3D_Parameters_1.SetMinSize(0.1e-3)
     NETGEN_3D_Parameters_1.SetCheckChartBoundary(0)
-    NETGEN_3D_Parameters_1.SetMaxSize(0.35e-3)
+    NETGEN_3D_Parameters_1.SetMaxSize(0.2e-3)
     isDone = Mesh_1.Compute()
     [
         tungsten_1,
