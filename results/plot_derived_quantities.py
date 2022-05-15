@@ -27,15 +27,9 @@ for instant_recomb in [True, False]:
             raise ValueError(
                 "More than one entry found in derived quantities, please adapt code."
             )
-        retention = (
-            sum(
-                [
-                    data["Total_retention_volume_{}".format(vol_id)]
-                    for vol_id in [6, 7, 8]
-                ]
-            )
-            / thickness
-        )
+        retention = sum(
+            [data["Total_retention_volume_{}".format(vol_id)] for vol_id in [6, 7, 8]]
+        ) / (thickness * 1e-3)
         if instant_recomb:
             retention_w.append(retention)
         else:

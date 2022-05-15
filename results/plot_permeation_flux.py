@@ -27,7 +27,7 @@ for instant_recomb in [True, False]:
             raise ValueError(
                 "More than one entry found in derived quantities, please adapt code."
             )
-        flux = -data["Flux_surface_{}_solute".format(id_coolant)]
+        flux = -data["Flux_surface_{}_solute".format(id_coolant)] / (thickness * 1e-3)
         if instant_recomb:
             flux_w.append(flux)
         else:
