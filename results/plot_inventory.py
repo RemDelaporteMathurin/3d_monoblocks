@@ -28,6 +28,7 @@ for instant_recomb in [True, False]:
             )
         retention = sum(
             [data["Total_retention_volume_{}".format(vol_id)] for vol_id in [6, 7, 8]]
+            * 4
         ) / (thickness * 1e-3)
         if instant_recomb:
             retention_w.append(retention)
