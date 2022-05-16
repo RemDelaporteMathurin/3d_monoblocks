@@ -37,13 +37,18 @@ flux_top_pipe *= 4
 flux_bottom *= 4
 flux_retro *= 4
 
+colour_vessel = "tab:blue"
+colour_coolant = "tab:orange"
+
 with plt.style.context(matplotx.styles.dufte):
-    plt.plot(t, flux_toroidal_gap, label="Toroidal gap")
-    plt.plot(t, flux_poloidal_gap, label="Poloidal gap")
-    plt.plot(t, flux_top_pipe, label="Top pipe")
-    plt.plot(t, flux_coolant, label="Coolant")
+    plt.plot(t, flux_toroidal_gap, label="Toroidal gap", color=colour_vessel)
+    plt.plot(t, flux_poloidal_gap, label="Poloidal gap", color=colour_vessel)
+    plt.plot(t, flux_top_pipe, label="Top pipe", color=colour_vessel)
+    plt.plot(t, flux_coolant, label="Coolant", color=colour_coolant)
     # plt.plot(t, flux_bottom, label="Bottom")
-    plt.plot(t, flux_retro, label="Top surface \n (retro-desorbed)")
+    plt.plot(
+        t, flux_retro, label="Top surface \n (retro-desorbed)", color=colour_vessel
+    )
 
     plt.xscale("log")
     plt.yscale("log")
