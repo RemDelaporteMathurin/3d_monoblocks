@@ -8,9 +8,9 @@ id_CuCrZr = 8  # volume CuCrZr
 id_W_top = 9
 id_coolant = 10
 id_poloidal_gap = 11
-id_top_pipe = 12
-id_toroidal_gap = 13
-id_bottom = 14
+id_toroidal_gap = 12
+id_bottom = 13
+id_top_pipe = 14
 
 my_model = F.Simulation()
 
