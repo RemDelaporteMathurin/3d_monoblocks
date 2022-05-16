@@ -40,6 +40,7 @@ difference = [100 * abs(w - wo) / w for w, wo in zip(retention_w, retention_wo)]
 with plt.style.context(matplotx.styles.dufte):
     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(6.4, 4.8 * 1.5))
     plt.sca(axs[0])
+    plt.title("No CuCrZr \n extrusion")
     plt.plot(
         thicknesses,
         retention_w,
