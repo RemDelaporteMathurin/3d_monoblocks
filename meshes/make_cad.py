@@ -135,31 +135,35 @@ def export_brep(shapes: list, path_filename: str):
 
 if __name__ == "__main__":
     thickness = 4
+    for gap in [0, 1]:
+        for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
+            print(thickness)
+            tungsten, cucrzr, cu = monoblock(
+                thickness=thickness,
+                height=25,
+                width=23,
+                cucrzr_inner_radius=6,
+                cucrzr_thickness=1.5,
+                cu_thickness=1,
+                w_thickness=5,
+                gap=gap,
+                cut_x=True,
+                cut_z=True,
+            )
 
-    for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
-        print(thickness)
-        tungsten, cucrzr, cu = monoblock(
-            thickness=thickness,
-            height=25,
-            width=23,
-            cucrzr_inner_radius=6,
-            cucrzr_thickness=1.5,
-            cu_thickness=1,
-            w_thickness=5,
-            gap=1,
-            cut_x=True,
-            cut_z=True,
-        )
+            # export as STL
+            cq.exporters.export(tungsten, "tungsten.stl")
+            cq.exporters.export(cucrzr, "cucrzr.stl")
+            cq.exporters.export(cu, "cu.stl")
 
-        # export as STL
-        cq.exporters.export(tungsten, "tungsten.stl")
-        cq.exporters.export(cucrzr, "cucrzr.stl")
-        cq.exporters.export(cu, "cu.stl")
-
-        # export as BREP to import in SALOME
-
-        parts = [tungsten, cucrzr, cu]
-        export_brep(
-            parts,
-            "{}mm_thickness/monoblock_{}mm_thickness.brep".format(thickness, thickness),
-        )
+            # export as BREP to import in SALOME
+            if gap == 0:
+                filename = "{}mm_thickness/monoblock_{}mm_thickness_no_gap.brep".format(
+                    thickness, thickness
+                )
+            else:
+                filename = "{}mm_thickness/monoblock_{}mm_thickness.brep".format(
+                    thickness, thickness
+                )
+            parts = [tungsten, cucrzr, cu]
+            export_brep(parts, filename)
