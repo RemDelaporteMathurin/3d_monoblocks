@@ -115,7 +115,7 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
     NETGEN_3D_Parameters_1.SetCheckChartBoundary(0)
     NETGEN_3D_Parameters_1.SetMinSize(0.1e-3)
     NETGEN_3D_Parameters_1.SetCheckChartBoundary(0)
-    NETGEN_3D_Parameters_1.SetMaxSize(0.2e-3)
+    NETGEN_3D_Parameters_1.SetMaxSize(0.3e-3)
     isDone = Mesh_1.Compute()
     [
         tungsten_1,
