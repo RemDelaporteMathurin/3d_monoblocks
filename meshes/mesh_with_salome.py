@@ -146,7 +146,7 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
 
     try:
         Mesh_1.ExportMED(
-            "{}mm_thickness/mesh_3D_{}mm_auto.med".format(thickness, thickness),
+            "{}mm_thickness/mesh_3D_{}mm.med".format(thickness, thickness),
             auto_groups=0,
             version=41,
             overwrite=1,
