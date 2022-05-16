@@ -29,8 +29,8 @@ class AverageSurface(F.DerivedQuantity):
 
 def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
     print(
-        "\n Running for {} mm  Transient: {} Recomb: {} \n".format(
-            thickness, transient, instant_recomb
+        "\n Running for {} mm  Transient: {} Recomb: {} Gap : {} \n".format(
+            thickness, transient, instant_recomb, gap
         )
     )
 
