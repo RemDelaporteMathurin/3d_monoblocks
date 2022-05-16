@@ -48,12 +48,12 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
     geompy.UnionIDs(cooling_surface, [91])
     poloidal_gap = geompy.CreateGroup(scaled_geometry, geompy.ShapeType["FACE"])
     geompy.UnionIDs(poloidal_gap, [22, 96])
-    face_top_pipe = geompy.CreateGroup(scaled_geometry, geompy.ShapeType["FACE"])
-    geompy.UnionIDs(face_top_pipe, [54])
     toroidal_gap = geompy.CreateGroup(scaled_geometry, geompy.ShapeType["FACE"])
     geompy.UnionIDs(toroidal_gap, [5])
     bottom = geompy.CreateGroup(scaled_geometry, geompy.ShapeType["FACE"])
     geompy.UnionIDs(bottom, [15])
+    face_top_pipe = geompy.CreateGroup(scaled_geometry, geompy.ShapeType["FACE"])
+    geompy.UnionIDs(face_top_pipe, [54])
 
     geompy.addToStudy(O, "O")
     geompy.addToStudy(OX, "OX")
@@ -67,9 +67,9 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
     geompy.addToStudyInFather(scaled_geometry, top_surface, "top_surface")
     geompy.addToStudyInFather(scaled_geometry, cooling_surface, "cooling_surface")
     geompy.addToStudyInFather(scaled_geometry, poloidal_gap, "poloidal_gap")
-    geompy.addToStudyInFather(scaled_geometry, face_top_pipe, "face_top_pipe")
     geompy.addToStudyInFather(scaled_geometry, toroidal_gap, "toroidal_gap")
     geompy.addToStudyInFather(scaled_geometry, bottom, "bottom")
+    geompy.addToStudyInFather(scaled_geometry, face_top_pipe, "face_top_pipe")
 
     ###
     ### SMESH component
@@ -104,9 +104,9 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
         cooling_surface, "cooling_surface", SMESH.FACE
     )
     poloidal_gap_1 = Mesh_1.GroupOnGeom(poloidal_gap, "poloidal_gap", SMESH.FACE)
-    face_top_pipe_1 = Mesh_1.GroupOnGeom(face_top_pipe, "face_top_pipe", SMESH.FACE)
     toroidal_gap_1 = Mesh_1.GroupOnGeom(toroidal_gap, "toroidal_gap", SMESH.FACE)
     bottom_1 = Mesh_1.GroupOnGeom(bottom, "bottom", SMESH.FACE)
+    face_top_pipe_1 = Mesh_1.GroupOnGeom(face_top_pipe, "face_top_pipe", SMESH.FACE)
 
     NETGEN_3D_Parameters_1.SetFineness(5)
     NETGEN_3D_Parameters_1.SetGrowthRate(0.05)
@@ -124,9 +124,9 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
         top_surface_1,
         cooling_surface_1,
         poloidal_gap_1,
-        face_top_pipe_1,
         toroidal_gap_1,
         bottom_1,
+        face_top_pipe_1,
     ] = Mesh_1.GetGroups()
 
     ## Set names of Mesh objects
@@ -136,9 +136,9 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
     smesh.SetName(top_surface_1, "top_surface")
     smesh.SetName(cooling_surface_1, "cooling_surface")
     smesh.SetName(poloidal_gap_1, "poloidal_gap")
-    smesh.SetName(face_top_pipe_1, "face_top_pipe")
     smesh.SetName(toroidal_gap_1, "toroidal_gap")
     smesh.SetName(bottom_1, "bottom")
+    smesh.SetName(face_top_pipe_1, "face_top_pipe")
     smesh.SetName(Mesh_1.GetMesh(), "Mesh_1")
     smesh.SetName(cucrzr_1, "cucrzr")
     smesh.SetName(cu_1, "cu")
