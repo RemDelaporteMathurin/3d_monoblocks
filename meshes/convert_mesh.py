@@ -48,7 +48,7 @@ if __name__ == "__main__":
     for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
         folder = "{}mm_thickness".format(thickness)
         correspondance_dict, cell_data_types = convert_med_to_xdmf(
-            medfilename="{}/mesh_3D_{}mm_auto.med".format(folder, thickness),
+            medfilename="{}/mesh_3D_{}mm.med".format(folder, thickness),
             cell_file="{}/mesh_cells.xdmf".format(folder),
             facet_file="{}/mesh_facets.xdmf".format(folder),
             cell_type="tetra",

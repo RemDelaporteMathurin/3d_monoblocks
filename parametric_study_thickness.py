@@ -12,20 +12,37 @@ from main import (
     cucrzr,
 )
 import FESTIM as F
+import fenics as f
 
 
-def run_mb(thickness: float, instant_recomb: bool, transient: bool):
+class AverageSurface(F.DerivedQuantity):
+    def __init__(self, field, surface) -> None:
+        super().__init__(field)
+        self.surface = surface
+        self.title = "Average {} surface {}".format(self.field, self.surface)
+
+    def compute(self):
+        return f.assemble(self.function * self.ds(self.surface)) / f.assemble(
+            1 * self.ds(self.surface)
+        )
+
+
+def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
     print(
-        "\n Running for {} mm  Transient: {} Recomb: {} \n".format(
-            thickness, transient, instant_recomb
+        "\n Running for {} mm  Transient: {} Recomb: {} Gap : {} \n".format(
+            thickness, transient, instant_recomb, gap
         )
     )
 
     folder = "meshes/{}mm_thickness".format(thickness)
-    my_model.mesh = F.MeshFromXDMF(
-        volume_file="{}/mesh_cells.xdmf".format(folder),
-        boundary_file="{}/mesh_facets.xdmf".format(folder),
-    )
+    if not gap:
+        volume_file = "{}/mesh_cells_no_gap.xdmf".format(folder)
+        boundary_file = "{}/mesh_facets_no_gap.xdmf".format(folder)
+    else:
+        volume_file = "{}/mesh_cells.xdmf".format(folder)
+        boundary_file = "{}/mesh_facets.xdmf".format(folder)
+
+    my_model.mesh = F.MeshFromXDMF(volume_file=volume_file, boundary_file=boundary_file)
 
     folder = "results/{}mm_thickness".format(thickness)
     if transient:
@@ -37,6 +54,9 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool):
         folder += "/instant_recomb"
     else:
         folder += "/no_recomb"
+
+    if not gap:
+        folder += "/no_gap"
 
     print(folder)
 
@@ -55,18 +75,21 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool):
                 field="solute", surface=instantaneous_recombination_poloidal.surfaces[0]
             ),
             F.SurfaceFlux(
-                field="solute", surface=instantaneous_recombination_top_pipe.surfaces[0]
-            ),
-            F.SurfaceFlux(
                 field="solute", surface=instantaneous_recombination_bottom.surfaces[0]
             ),
             F.SurfaceFlux(
                 field="solute", surface=instantaneous_recombination_toroidal.surfaces[0]
             ),
+            AverageSurface(field="T", surface=recombination_flux_coolant.surfaces[0]),
         ],
         filename="{}/derived_quantities.csv".format(folder),
     )
-
+    if gap:
+        derived_quantities.derived_quantities.append(
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_top_pipe.surfaces[0]
+            )
+        )
     my_model.exports = F.Exports(
         [
             derived_quantities,
@@ -84,7 +107,8 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool):
     if instant_recomb:
         my_model.boundary_conditions.append(instantaneous_recombination_poloidal)
         # my_model.boundary_conditions.append(instantaneous_recombination_bottom)
-        my_model.boundary_conditions.append(instantaneous_recombination_top_pipe)
+        if gap:
+            my_model.boundary_conditions.append(instantaneous_recombination_top_pipe)
 
     my_model.boundary_conditions.append(h_implantation_top)  # add it at the end
 
@@ -104,6 +128,6 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool):
 
 # parametric study thickness
 for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
-    for transient in [True]:
+    for gap in [False, True]:
         for instant_recomb in [True, False]:
-            run_mb(thickness, instant_recomb=instant_recomb, transient=transient)
+            run_mb(thickness, instant_recomb=instant_recomb, transient=True, gap=gap)

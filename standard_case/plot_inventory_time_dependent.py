@@ -20,7 +20,14 @@ inventory_recomb = sum(
 )
 inventory_recomb *= 4  # for the whole MB
 
+difference = [
+    100 * abs(w - wo) / w for w, wo in zip(inventory_recomb, inventory_no_recomb)
+]
+
 with plt.style.context(matplotx.styles.dufte):
+    fig, axs = plt.subplots(2, 1, sharex=True, figsize=(6.4, 4.8 * 1.5))
+    plt.sca(axs[0])
+
     plt.plot(
         data_no_recomb["ts"],
         inventory_no_recomb,
@@ -41,8 +48,14 @@ with plt.style.context(matplotx.styles.dufte):
     # plt.ylim(bottom=0)
     plt.ylim(1e14, 1e16)
     matplotx.ylabel_top("Inventory (H)")
-    plt.xlabel("Time (s)")
     plt.xscale("log")
     matplotx.line_labels()
+    plt.tight_layout()
+    plt.sca(axs[1])
+
+    plt.xlabel("Time (s)")
+    plt.plot(data_no_recomb["ts"], difference)
+    plt.ylim(bottom=0)
+    matplotx.ylabel_top("Relative \n difference (%)")
     plt.tight_layout()
     plt.show()
