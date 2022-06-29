@@ -69,7 +69,7 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0_W, E_Kr_W):
     ]
 
     my_model.settings.transient = True
-    my_model.settings.final_time = 1e5
+    my_model.settings.final_time = 3600 * 24 * 30
 
     my_model.dt = F.Stepsize(3600, stepsize_change_ratio=1.1)
 
@@ -78,7 +78,7 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0_W, E_Kr_W):
         [
             F.TotalVolume(field=field, volume=mat.id)
             for mat in my_model.materials.materials
-            for field in ["1", "2", "retention"]
+            for field in ["solute", "1", "2", "retention"]
         ]
         + [
             F.SurfaceFlux(field="solute", surface=id_surf)
@@ -104,7 +104,6 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0_W, E_Kr_W):
             derived_quantities,
         ]
     )
-    my_model.log_level = 20
     my_model.initialise()
     my_model.run()
 
