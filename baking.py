@@ -70,6 +70,7 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0_W, E_Kr_W):
 
     my_model.settings.transient = True
     my_model.settings.final_time = 3600 * 24 * 30
+    my_model.settings.absolute_tolerance = 1e0
 
     my_model.dt = F.Stepsize(3600, stepsize_change_ratio=1.1)
 
@@ -92,6 +93,7 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0_W, E_Kr_W):
             ]
         ],
         filename=export_folder + "/derived_quantities.csv",
+        nb_iterations_between_exports=1,
     )
     my_model.exports = F.Exports(
         [
@@ -104,10 +106,17 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0_W, E_Kr_W):
             derived_quantities,
         ]
     )
+    # my_model.log_level = 20
     my_model.initialise()
     my_model.run()
 
 
 if __name__ == "__main__":
     run_steady_state_exposure()
-    run_baking(baking_temperature=600, instantaneous_recomb=True, Kr_0_W=1, E_Kr_W=0)
+    run_baking(
+        baking_temperature=200 + 273.15, instantaneous_recomb=True, Kr_0_W=1, E_Kr_W=0
+    )
+    run_baking(
+        baking_temperature=300 + 273.15, instantaneous_recomb=True, Kr_0_W=1, E_Kr_W=0
+    )
+    run_baking(baking_temperature=500, instantaneous_recomb=True, Kr_0_W=1, E_Kr_W=0)
