@@ -31,6 +31,13 @@
                 "ms-python.python",
                 "ms-python.vscode-pylance"
             ]
+        },
+        "codespaces": {
+            "repositories": {
+                "RemDelaporteMathurin/FESTIM": {
+                    "permissions": "read-all"
+                }
+            }
         }
     },
     // Allows port 8888 used for Jupyter Notebook to be available locally.
