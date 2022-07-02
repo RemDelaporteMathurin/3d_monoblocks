@@ -44,5 +44,6 @@
     "forwardPorts": [
         8888
     ],
-    "remoteUser": "vscode"
+    "remoteUser": "vscode",
+    "postCreateCommand": "pip install git+https://github.com/RemDelaporteMathurin/FESTIM"
 }
