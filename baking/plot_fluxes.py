@@ -146,86 +146,89 @@ def get_fluxes(baking_temperature, tmax, normalised):
         top_pipe_desorption,
     )
 
+def plot_results():
+    with plt.style.context(matplotx.styles.dufte):
+        plt.figure(figsize=(6.4 * 1.2, 4.8 * 1.2))
 
-with plt.style.context(matplotx.styles.dufte):
-    plt.figure(figsize=(6.4 * 1.2, 4.8 * 1.2))
+        plot_fluxes_stacked(600, tmax=1.1)
+        label_fillbetween(fontsize=12)
 
-    plot_fluxes_stacked(600, tmax=1.1)
-    label_fillbetween(fontsize=12)
+        plt.ylim(0, 100)
+        plt.xlim(0)
 
-    plt.ylim(0, 100)
-    plt.xlim(0)
+        matplotx.ylabel_top("Relative desorption \n flux (%)")
+        plt.xlabel("Baking time (days)")
+        plt.tight_layout()
 
-    matplotx.ylabel_top("Relative desorption \n flux (%)")
-    plt.xlabel("Baking time (days)")
-    plt.tight_layout()
+        bake_temps = [500, 520, 550, 573, 600, 673]
+        min_T_colour, max_T_colour = min(bake_temps) - 100, max(bake_temps)
 
-    bake_temps = [500, 520, 550, 573, 600, 673]
-    min_T_colour, max_T_colour = min(bake_temps) - 100, max(bake_temps)
+        plt.figure(figsize=(6.4, 4.8))
+        for T_baking in bake_temps:
+            plot_flux(
+                T_baking,
+                normalised=True,
+                color=cm.Reds((T_baking - min_T_colour) / (max_T_colour - min_T_colour)),
+            )
+        # label_fillbetween(fontsize=12)
 
-    plt.figure(figsize=(6.4, 4.8))
-    for T_baking in bake_temps:
-        plot_flux(
-            T_baking,
-            normalised=True,
-            color=cm.Reds((T_baking - min_T_colour) / (max_T_colour - min_T_colour)),
-        )
-    # label_fillbetween(fontsize=12)
+        plt.ylim(-10, 100)
+        plt.xlim(0)
 
-    plt.ylim(-10, 100)
-    plt.xlim(0)
-
-    matplotx.line_labels()
-    matplotx.ylabel_top("Relative desorption \n flux (%)")
-    plt.xlabel("Baking time (days)")
-    plt.tight_layout()
-
-    plt.figure(figsize=(6.4, 4.8))
-    sub_bake_temps = bake_temps[1::2]
-
-    for T_baking in sub_bake_temps:
-        plot_flux(
-            T_baking,
-            tmax=10,
-            normalised=False,
-            color=cm.Reds((T_baking - min_T_colour) / (max_T_colour - min_T_colour)),
-        )
-    # label_fillbetween(fontsize=12)
-
-    plt.xlim(0)
-
-    matplotx.line_labels()
-    matplotx.ylabel_top("Desorption flux")
-    plt.xlabel("Baking time (days)")
-    plt.tight_layout()
-
-    fig, axs = plt.subplots(
-        ncols=1, nrows=len(sub_bake_temps), sharex=True, figsize=(6.4, 4.8)
-    )
-    for ax, T_baking in zip(axs, sub_bake_temps):
-        plt.sca(ax)
-        plot_flux(
-            T_baking,
-            normalised=False,
-            color=cm.Reds((T_baking - min_T_colour) / (max_T_colour - min_T_colour)),
-        )
-        plt.ylim(
-            bottom=-plt.gca().get_ylim()[1] * 0.1,
-        )
-        plt.xlim(left=0)
         matplotx.line_labels()
+        matplotx.ylabel_top("Relative desorption \n flux (%)")
+        plt.xlabel("Baking time (days)")
+        plt.tight_layout()
 
-    # label_fillbetween(fontsize=12)
+        plt.figure(figsize=(6.4, 4.8))
+        sub_bake_temps = bake_temps[1::2]
 
-    plt.sca(axs[1])
-    plt.ylabel(
-        "Desorption \n flux (H/m2/s) \n",
-        rotation=0,
-        verticalalignment="center",
-        horizontalalignment="right",
-    )
-    plt.sca(axs[-1])
-    plt.xlabel("Baking time (days)")
-    plt.tight_layout()
+        for T_baking in sub_bake_temps:
+            plot_flux(
+                T_baking,
+                tmax=10,
+                normalised=False,
+                color=cm.Reds((T_baking - min_T_colour) / (max_T_colour - min_T_colour)),
+            )
+        # label_fillbetween(fontsize=12)
 
-    plt.show()
+        plt.xlim(0)
+
+        matplotx.line_labels()
+        matplotx.ylabel_top("Desorption flux")
+        plt.xlabel("Baking time (days)")
+        plt.tight_layout()
+
+        fig, axs = plt.subplots(
+            ncols=1, nrows=len(sub_bake_temps), sharex=True, figsize=(6.4, 4.8)
+        )
+        for ax, T_baking in zip(axs, sub_bake_temps):
+            plt.sca(ax)
+            plot_flux(
+                T_baking,
+                normalised=False,
+                color=cm.Reds((T_baking - min_T_colour) / (max_T_colour - min_T_colour)),
+            )
+            plt.ylim(
+                bottom=-plt.gca().get_ylim()[1] * 0.1,
+            )
+            plt.xlim(left=0)
+            matplotx.line_labels()
+
+        # label_fillbetween(fontsize=12)
+
+        plt.sca(axs[1])
+        plt.ylabel(
+            "Desorption \n flux (H/m2/s) \n",
+            rotation=0,
+            verticalalignment="center",
+            horizontalalignment="right",
+        )
+        plt.sca(axs[-1])
+        plt.xlabel("Baking time (days)")
+        plt.tight_layout()
+
+        plt.show()
+
+if __name__ == "__main":
+    plot_results()
