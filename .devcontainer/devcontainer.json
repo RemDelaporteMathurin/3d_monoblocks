@@ -34,6 +34,7 @@
         },
         "codespaces": {
             "repositories": {
+                // This can be removed when FESTIM is open-source
                 "RemDelaporteMathurin/FESTIM": {
                     "permissions": "read-all"
                 }
@@ -45,5 +46,6 @@
         8888
     ],
     "remoteUser": "vscode",
-    "postCreateCommand": "pip install git+https://github.com/RemDelaporteMathurin/FESTIM"
+    // This can be removed when FESTIM is open-source
+    "postCreateCommand": "pip install git+https://github.com/RemDelaporteMathurin/FESTIM@v0.10.0"
 }
