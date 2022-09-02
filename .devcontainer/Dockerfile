@@ -6,5 +6,3 @@ RUN conda install -c conda-forge mamba
 RUN mamba install -c conda-forge fenics
 
 RUN pip install FESTIM==0.10.2
-
-RUN conda install -n base ipykernel --update-deps --force-reinstall
