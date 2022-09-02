@@ -50,6 +50,8 @@ def plot_results():
 
         matplotx.line_labels()
         plt.tight_layout()
+        plt.savefig("relative_inventory_vs_time.pdf")
+
         plt.show()
 
 

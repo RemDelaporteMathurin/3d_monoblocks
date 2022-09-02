@@ -161,6 +161,8 @@ def plot_results():
         plt.xlabel("Baking time (days)")
         plt.tight_layout()
 
+        plt.savefig("flux_contributions_vs_time.pdf")
+
         bake_temps = [500, 520, 550, 573, 600, 673]
         min_T_colour, max_T_colour = min(bake_temps) - 100, max(bake_temps)
 
@@ -234,6 +236,8 @@ def plot_results():
         plt.sca(axs[-1])
         plt.xlabel("Baking time (days)")
         plt.tight_layout()
+
+        plt.savefig("flux_vs_time.pdf")
 
         plt.show()
 
