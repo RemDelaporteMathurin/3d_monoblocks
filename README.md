@@ -43,7 +43,7 @@ docker run -ti -v ${PWD}:/home/fenics/shared quay.io/fenicsproject/stable:latest
 Install the dev version of FESTIM:
 
 ```
-pip install git+https://github.com/RemDelaporteMathurin/FESTIM@v0.10.0
+pip install festim==0.10.2
 ```
 
 To run the FESTIM simulation:

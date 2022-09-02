@@ -11,7 +11,7 @@ from main import (
     copper,
     cucrzr,
 )
-import FESTIM as F
+import festim as F
 import fenics as f
 
 

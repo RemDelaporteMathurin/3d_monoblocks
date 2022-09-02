@@ -12,7 +12,7 @@ from main import (
     cucrzr,
 )
 
-import FESTIM as F
+import festim as F
 
 
 def add_bcs(model: F.Simulation, recomb: bool):
