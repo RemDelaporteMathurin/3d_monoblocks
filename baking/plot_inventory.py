@@ -32,6 +32,7 @@ def plot_inventory(baking_temperature, **kwargs):
         **kwargs
     )
 
+
 def plot_results():
     with plt.style.context(matplotx.styles.dufte):
         plt.figure(figsize=(6.4, 6))
@@ -50,6 +51,7 @@ def plot_results():
         matplotx.line_labels()
         plt.tight_layout()
         plt.show()
+
 
 if __name__ == "__main__":
     plot_results()

@@ -146,6 +146,7 @@ def get_fluxes(baking_temperature, tmax, normalised):
         top_pipe_desorption,
     )
 
+
 def plot_results():
     with plt.style.context(matplotx.styles.dufte):
         plt.figure(figsize=(6.4 * 1.2, 4.8 * 1.2))
@@ -168,7 +169,9 @@ def plot_results():
             plot_flux(
                 T_baking,
                 normalised=True,
-                color=cm.Reds((T_baking - min_T_colour) / (max_T_colour - min_T_colour)),
+                color=cm.Reds(
+                    (T_baking - min_T_colour) / (max_T_colour - min_T_colour)
+                ),
             )
         # label_fillbetween(fontsize=12)
 
@@ -188,7 +191,9 @@ def plot_results():
                 T_baking,
                 tmax=10,
                 normalised=False,
-                color=cm.Reds((T_baking - min_T_colour) / (max_T_colour - min_T_colour)),
+                color=cm.Reds(
+                    (T_baking - min_T_colour) / (max_T_colour - min_T_colour)
+                ),
             )
         # label_fillbetween(fontsize=12)
 
@@ -207,7 +212,9 @@ def plot_results():
             plot_flux(
                 T_baking,
                 normalised=False,
-                color=cm.Reds((T_baking - min_T_colour) / (max_T_colour - min_T_colour)),
+                color=cm.Reds(
+                    (T_baking - min_T_colour) / (max_T_colour - min_T_colour)
+                ),
             )
             plt.ylim(
                 bottom=-plt.gca().get_ylim()[1] * 0.1,
@@ -229,6 +236,7 @@ def plot_results():
         plt.tight_layout()
 
         plt.show()
+
 
 if __name__ == "__main":
     plot_results()
