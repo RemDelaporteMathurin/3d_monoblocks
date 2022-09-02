@@ -5,5 +5,6 @@ FROM mcr.microsoft.com/vscode/devcontainers/miniconda:0-3
 RUN conda install -c conda-forge mamba
 RUN mamba install -c conda-forge fenics
 
-# Possible when FESTIM is open-source 
-# RUN pip install FESTIM==0.10.0
+RUN pip install FESTIM==0.10.0
+
+RUN conda install -n base ipykernel --update-deps --force-reinstall
