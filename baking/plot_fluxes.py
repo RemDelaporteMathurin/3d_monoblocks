@@ -36,7 +36,9 @@ def plot_flux(baking_temperature, tmax=None, normalised=True, **kwargs):
     plt.plot(t, total_flux, label="{} K".format(baking_temperature), **kwargs)
 
 
-def plot_fluxes_stacked(baking_temperature, tmax=None, normalised=True):
+def plot_fluxes_stacked(
+    baking_temperature, tmax=None, normalised=True, contributions=False
+):
     (
         t,
         top_desorption,
@@ -45,6 +47,20 @@ def plot_fluxes_stacked(baking_temperature, tmax=None, normalised=True):
         coolant_desorption,
         top_pipe_desorption,
     ) = get_fluxes(baking_temperature, tmax, normalised)
+
+    if contributions:
+        total_flux = (
+            top_desorption
+            + toroidal_desorption
+            + poloidal_desorption
+            + coolant_desorption
+            + top_pipe_desorption
+        )
+        top_desorption *= 100 / total_flux
+        toroidal_desorption *= 100 / total_flux
+        poloidal_desorption *= 100 / total_flux
+        coolant_desorption *= 100 / total_flux
+        top_pipe_desorption *= 100 / total_flux
 
     def blue(lightness):
         blue_rgb = list(mcolors.to_rgb("tab:blue")[:])
@@ -151,7 +167,7 @@ def plot_results():
     with plt.style.context(matplotx.styles.dufte):
         plt.figure(figsize=(6.4 * 1.2, 4.8 * 1.2))
 
-        plot_fluxes_stacked(600, tmax=1.1)
+        plot_fluxes_stacked(600, tmax=1.1, contributions=False)
         label_fillbetween(fontsize=12)
 
         plt.ylim(0, 100)
@@ -162,6 +178,20 @@ def plot_results():
         plt.tight_layout()
 
         plt.savefig("flux_contributions_vs_time.pdf")
+
+        plt.figure(figsize=(6.4 * 1.2, 4.8 * 1.2))
+
+        plot_fluxes_stacked(600, tmax=1.1, contributions=True)
+        label_fillbetween(fontsize=12)
+
+        plt.ylim(0, 100)
+        plt.xlim(0)
+
+        matplotx.ylabel_top("Relative desorption \n flux (%)")
+        plt.xlabel("Baking time (days)")
+        plt.tight_layout()
+
+        plt.savefig("flux_contributions_proportion_vs_time.pdf")
 
         bake_temps = [500, 520, 550, 573, 600, 673]
         min_T_colour, max_T_colour = min(bake_temps) - 100, max(bake_temps)
@@ -242,5 +272,5 @@ def plot_results():
         plt.show()
 
 
-if __name__ == "__main":
+if __name__ == "__main__":
     plot_results()
