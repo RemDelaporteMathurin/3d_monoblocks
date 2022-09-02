@@ -32,20 +32,11 @@
                 "ms-python.vscode-pylance"
             ]
         },
-        "codespaces": {
-            "repositories": {
-                // This can be removed when FESTIM is open-source
-                "RemDelaporteMathurin/FESTIM": {
-                    "permissions": "read-all"
-                }
-            }
-        }
+        "codespaces": {}
     },
     // Allows port 8888 used for Jupyter Notebook to be available locally.
     "forwardPorts": [
         8888
     ],
     "remoteUser": "vscode",
-    // This can be removed when FESTIM is open-source
-    "postCreateCommand": "pip install git+https://github.com/RemDelaporteMathurin/FESTIM@v0.10.0"
 }
