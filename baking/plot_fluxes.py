@@ -221,7 +221,7 @@ def barchart_total_desorption(bake_temps):
         bottom=total_toks,
     )
 
-    plt.xticks(pos, bake_temps)
+    plt.xticks(pos, ["{:.0f} K".format(T) for T in bake_temps])
 
 
 def evolution_fluxes_contributions(T_baking):
@@ -273,7 +273,7 @@ def flux_vs_time(bake_temps, min_T_colour, max_T_colour):
 
     plt.sca(axs[1])
     plt.ylabel(
-        "Desorption \n flux (H/m2/s) \n",
+        "Desorption \n flux (H/s) \n",
         rotation=0,
         verticalalignment="center",
         horizontalalignment="right",
@@ -301,10 +301,11 @@ def plot_results():
 
         plt.figure()
         barchart_total_desorption(bake_temps)
-        plt.xlabel("Baking temperature (K)")
-        plt.ylabel("Total H desorbed (H)")
+        plt.xlabel("Baking temperature")
+        matplotx.ylabel_top("Total H \n desorbed (H)")
         plt.legend()
         plt.tight_layout()
+        plt.savefig("total_desorption_over_time.pdf")
 
         # ######### All non-normalised fluxes on 1 plot
 
@@ -348,7 +349,7 @@ def plot_results():
         plt.xlim(0)
 
         matplotx.line_labels()
-        matplotx.ylabel_top("Desorption flux")
+        matplotx.ylabel_top("Desorption flux (H/s)")
         plt.xlabel("Baking time (days)")
         plt.tight_layout()
 
