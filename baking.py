@@ -30,23 +30,22 @@ def run_steady_state_exposure():
     my_model.run()
 
 
-def run_baking(baking_temperature, instantaneous_recomb, Kr_0_W, E_Kr_W):
+def run_baking(baking_temperature, instantaneous_recomb, Kr_0=None, E_Kr=None):
     my_model.T = F.Temperature(baking_temperature)
 
-    recombination_flux_tungsten = F.RecombinationFlux(
-        Kr_0=Kr_0_W,
-        E_Kr=E_Kr_W,
-        order=2,
-        surfaces=TUNGSTEN_SURFACES,
-    )
-
-    instantaneous_recomb_everywhere = F.DirichletBC(
-        value=0,
-        surfaces=TUNGSTEN_SURFACES + [id_coolant, id_top_pipe],
-    )
     if instantaneous_recomb:
+        instantaneous_recomb_everywhere = F.DirichletBC(
+            value=0,
+            surfaces=TUNGSTEN_SURFACES + [id_coolant, id_top_pipe],
+        )
         my_model.boundary_conditions = [instantaneous_recomb_everywhere]
     else:
+        recombination_flux_tungsten = F.RecombinationFlux(
+            Kr_0=Kr_0,
+            E_Kr=E_Kr,
+            order=2,
+            surfaces=TUNGSTEN_SURFACES,
+        )
         my_model.boundary_conditions = [
             recombination_flux_tungsten,
             recombination_flux_coolant,
@@ -75,6 +74,10 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0_W, E_Kr_W):
     my_model.dt = F.Stepsize(3600, stepsize_change_ratio=1.1)
 
     export_folder = "baking/baking_temperature={:.0f}K".format(baking_temperature)
+    if not instantaneous_recomb:
+        export_folder += "/non_instant_recomb_Kr_0={:.2e}_E_Kr={:.2e}".format(
+            Kr_0, E_Kr
+        )
     derived_quantities = F.DerivedQuantities(
         [
             F.TotalVolume(field=field, volume=mat.id)
@@ -112,11 +115,9 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0_W, E_Kr_W):
 
 
 if __name__ == "__main__":
-    run_steady_state_exposure()
+    # run_steady_state_exposure()
+
+    # run_baking(baking_temperature=673, instantaneous_recomb=True)
     run_baking(
-        baking_temperature=200 + 273.15, instantaneous_recomb=True, Kr_0_W=1, E_Kr_W=0
+        baking_temperature=520, instantaneous_recomb=False, Kr_0=3.2e-15, E_Kr=1.16
     )
-    run_baking(
-        baking_temperature=300 + 273.15, instantaneous_recomb=True, Kr_0_W=1, E_Kr_W=0
-    )
-    run_baking(baking_temperature=500, instantaneous_recomb=True, Kr_0_W=1, E_Kr_W=0)
