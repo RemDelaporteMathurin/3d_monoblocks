@@ -25,7 +25,7 @@ difference = [
 ]
 
 with plt.style.context(matplotx.styles.dufte):
-    fig, axs = plt.subplots(2, 1, sharex=True, figsize=(6.4, 4.8 * 1.5))
+    fig, axs = plt.subplots(2, 1, sharex=True, figsize=(6.4, 4.8*1.2), gridspec_kw={'height_ratios': [2, 1]})
     plt.sca(axs[0])
 
     plt.plot(
@@ -55,7 +55,7 @@ with plt.style.context(matplotx.styles.dufte):
 
     plt.xlabel("Time (s)")
     plt.plot(data_no_recomb["ts"], difference)
-    plt.ylim(bottom=0)
+    plt.ylim(bottom=0, top=1000)
     matplotx.ylabel_top("Relative \n difference (%)")
     plt.tight_layout()
     plt.show()

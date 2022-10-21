@@ -62,7 +62,7 @@ my_model.traps = F.Traps(
     [
         F.Trap(
             k_0=8.96e-17,
-            E_k=0.39,
+            E_k=tungsten.E_D,
             p_0=1e13,
             E_p=0.87,
             density=1.3e-3 * properties.atom_density_W,
@@ -70,7 +70,7 @@ my_model.traps = F.Traps(
         ),
         F.Trap(
             k_0=[8.96e-17, 6e-17, 1.2e-16],
-            E_k=[0.39, 0.39, 0.42],
+            E_k=[tungsten.E_D, copper.E_D, cucrzr.E_D],
             p_0=[1e13, 8e13, 8e13],
             E_p=[1.0, 0.5, 0.85],
             density=[

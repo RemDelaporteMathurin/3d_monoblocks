@@ -38,7 +38,7 @@ for instant_recomb in [True, False]:
 difference = [100 * abs(w - wo) / w for w, wo in zip(flux_w, flux_wo)]
 
 with plt.style.context(matplotx.styles.dufte):
-    fig, axs = plt.subplots(2, 1, sharex=True, figsize=(6.4, 4.8 * 1.5))
+    fig, axs = plt.subplots(2, 1, sharex=True, figsize=(6.4, 4.8*1.2), gridspec_kw={'height_ratios': [2, 1]})
     plt.sca(axs[0])
     plt.plot(
         thicknesses,
