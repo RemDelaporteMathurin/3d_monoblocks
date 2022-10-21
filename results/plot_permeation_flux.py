@@ -43,11 +43,11 @@ with plt.style.context(matplotx.styles.dufte):
     plt.plot(
         thicknesses,
         flux_w,
-        color="tab:blue",
+        color="tab:orange",
         label="Instantaneous \n recombination",
     )
-    plt.plot(thicknesses, flux_wo, color="tab:blue", label="No recombination")
-    plt.fill_between(thicknesses, flux_w, flux_wo, alpha=0.3)
+    plt.plot(thicknesses, flux_wo, color="tab:orange", label="No recombination")
+    plt.fill_between(thicknesses, flux_w, flux_wo, alpha=0.3, color="tab:orange")
     matplotx.ylabel_top("Permeation \n flux per \n unit thickness \n (H/m/s)")
     # plt.yscale("log")
     plt.ylim(bottom=0)
@@ -57,7 +57,7 @@ with plt.style.context(matplotx.styles.dufte):
 
     matplotx.ylabel_top("Relative \n difference (%)")
     plt.xlabel("Thickness $e$ (mm)")
-    plt.plot(thicknesses, difference)
+    plt.plot(thicknesses, difference, color="tab:orange")
     plt.ylim(bottom=0)
     plt.tight_layout()
     plt.show()

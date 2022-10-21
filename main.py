@@ -1,4 +1,4 @@
-import FESTIM as F
+import festim as F
 
 import properties
 
