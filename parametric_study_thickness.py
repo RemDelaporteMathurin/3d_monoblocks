@@ -96,6 +96,8 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
             F.XDMFExport("T", folder=folder),
             F.XDMFExport("solute", folder=folder),
             F.XDMFExport("retention", folder=folder),
+            F.XDMFExport("1", folder=folder,checkpoint=True),
+            F.XDMFExport("2", folder=folder,checkpoint=True),
         ]
     )
 
@@ -127,7 +129,8 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
 
 
 # parametric study thickness
-for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
+#for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
+for thickness in [4]:
     for gap in [False, True]:
         for instant_recomb in [True, False]:
-            run_mb(thickness, instant_recomb=instant_recomb, transient=True, gap=gap)
+            run_mb(thickness, instant_recomb=instant_recomb, transient=False, gap=gap)
