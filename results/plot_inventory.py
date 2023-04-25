@@ -9,7 +9,7 @@ retention_wo = []
 time = 1e4
 for instant_recomb in [True, False]:
     for thickness in thicknesses:
-        folder = "{}mm_thickness".format(thickness)
+        folder = "//wsl$/Ubuntu-20.04/home/jmougenot/3d_monoblocks/results/{}mm_thickness".format(thickness)
         if transient:
             folder += "/transient"
         else:

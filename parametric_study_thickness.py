@@ -1,12 +1,18 @@
+from tkinter import W
 from main import (
     my_model,
     heat_transfer_bcs,
     h_implantation_top,
     recombination_flux_coolant,
-    instantaneous_recombination_poloidal,
+    instantaneous_recombination_poloidal_W,
+    instantaneous_recombination_poloidal_Cu,
     instantaneous_recombination_top_pipe,
     instantaneous_recombination_bottom,
     instantaneous_recombination_toroidal,
+    recombination_poloidal_W,
+    recombination_poloidal_Cu,
+    recombination_toroidal,
+    recombination_top_pipe,
     tungsten,
     copper,
     cucrzr,
@@ -27,7 +33,7 @@ class AverageSurface(F.DerivedQuantity):
         )
 
 
-def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
+def run_mb(thickness: float, instant_recomb: int, transient: bool, gap: bool):
     print(
         "\n Running for {} mm  Transient: {} Recomb: {} Gap : {} \n".format(
             thickness, transient, instant_recomb, gap
@@ -50,10 +56,14 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
     else:
         folder += "/steady_state"
 
-    if instant_recomb:
+    if instant_recomb==1:
         folder += "/instant_recomb"
     else:
-        folder += "/no_recomb"
+        if instant_recomb==2:
+            folder += "/recomb"
+        else:
+            folder += "/no_recomb"
+
 
     if not gap:
         folder += "/no_gap"
@@ -72,7 +82,10 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
                 field="solute", surface=recombination_flux_coolant.surfaces[0]
             ),
             F.SurfaceFlux(
-                field="solute", surface=instantaneous_recombination_poloidal.surfaces[0]
+                field="solute", surface=instantaneous_recombination_poloidal_W.surfaces[0]
+            ),
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_poloidal_Cu.surfaces[0]
             ),
             F.SurfaceFlux(
                 field="solute", surface=instantaneous_recombination_bottom.surfaces[0]
@@ -104,21 +117,32 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
     h_transport_bcs = [recombination_flux_coolant]
     my_model.boundary_conditions = heat_transfer_bcs + h_transport_bcs
 
-    my_model.boundary_conditions.append(instantaneous_recombination_toroidal)
+    if instant_recomb==0:
+        my_model.boundary_conditions.append(instantaneous_recombination_toroidal)
 
-    if instant_recomb:
-        my_model.boundary_conditions.append(instantaneous_recombination_poloidal)
+    if instant_recomb==1:
+        my_model.boundary_conditions.append(instantaneous_recombination_toroidal)
+        my_model.boundary_conditions.append(instantaneous_recombination_poloidal_W)
+        my_model.boundary_conditions.append(instantaneous_recombination_poloidal_Cu)
         # my_model.boundary_conditions.append(instantaneous_recombination_bottom)
         if gap:
             my_model.boundary_conditions.append(instantaneous_recombination_top_pipe)
+
+    if instant_recomb==2:     
+        my_model.boundary_conditions.append(instantaneous_recombination_toroidal)
+        my_model.boundary_conditions.append(instantaneous_recombination_poloidal_W)
+        my_model.boundary_conditions.append(recombination_poloidal_Cu)
+        # my_model.boundary_conditions.append(instantaneous_recombination_bottom)
+        if gap:
+            my_model.boundary_conditions.append(recombination_top_pipe)
 
     my_model.boundary_conditions.append(h_implantation_top)  # add it at the end
 
     if transient:
         my_model.t = 0
-        my_model.dt = F.Stepsize(initial_value=1e4, stepsize_change_ratio=1.1)
+        my_model.dt = F.Stepsize(initial_value=1e5, stepsize_change_ratio=1.1)
         my_model.settings.transient = True
-        my_model.settings.final_time = 1e4
+        my_model.settings.final_time = 1e5
     else:
         my_model.dt = None
         my_model.settings.transient = False
@@ -129,8 +153,7 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
 
 
 # parametric study thickness
-#for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
-for thickness in [4]:
-    for gap in [False, True]:
-        for instant_recomb in [True, False]:
-            run_mb(thickness, instant_recomb=instant_recomb, transient=False, gap=gap)
+for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
+    for gap in [True]:
+        for recomb in [0,1,2]:
+            run_mb(thickness, instant_recomb=recomb, transient=True, gap=gap)
