@@ -1,2 +1,2 @@
-t(s),Total retention volume 6,Total retention volume 7,Total retention volume 8,Flux surface 10: solute,Flux surface 11: solute,Flux surface 12: solute,Flux surface 14: solute,Flux surface 13: solute
-10000.0,6.345134806026374e+17,4903830760814443.0,2.095618015382048e+17,-13599694813.673397,10287431171.715996,2001007844.504508,-370.2493019808883,2797878518.464627
+t(s),Total retention volume 6,Total retention volume 7,Total retention volume 8,Total solute volume 6,Total solute volume 7,Total solute volume 8,Flux surface 10: solute,Flux surface 11: solute,Flux surface 12: solute,Flux surface 14: solute,Flux surface 13: solute,Average T surface 10,Flux surface 15: solute
+0,5985910168095286.0,4551562129103133.0,1.986205436535994e+17,274235508750527.22,4551288816870011.0,1.3998093814664408e+17,-10928395929.383158,6094290017.150415,106816747.29974394,-2.7899368904104174,-60795132520.40429,395.6363698915197,1851569078.8241436
