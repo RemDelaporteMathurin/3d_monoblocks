@@ -2,7 +2,8 @@ import festim as F
 
 from main import (
     my_model,
-    id_poloidal_gap,
+    id_poloidal_gap_Cu,
+    id_poloidal_gap_W,
     id_toroidal_gap,
     id_bottom,
     id_W_top,
@@ -12,7 +13,7 @@ from main import (
 )
 
 
-TUNGSTEN_SURFACES = [id_poloidal_gap, id_toroidal_gap, id_bottom, id_W_top]
+TUNGSTEN_SURFACES = [id_poloidal_gap_W, id_toroidal_gap, id_bottom, id_W_top]
 
 
 def run_steady_state_exposure():
@@ -30,13 +31,13 @@ def run_steady_state_exposure():
     my_model.run()
 
 
-def run_baking(baking_temperature, instantaneous_recomb, Kr_0=None, E_Kr=None):
+def run_baking(baking_temperature, instantaneous_recomb, Kr_0=None, E_Kr=None, thickness=4):
     my_model.T = F.Temperature(baking_temperature)
 
     if instantaneous_recomb:
         instantaneous_recomb_everywhere = F.DirichletBC(
             value=0,
-            surfaces=TUNGSTEN_SURFACES + [id_coolant, id_top_pipe],
+            surfaces=TUNGSTEN_SURFACES + [id_coolant, id_top_pipe, id_poloidal_gap_Cu],
         )
         my_model.boundary_conditions = [instantaneous_recomb_everywhere]
     else:
@@ -46,11 +47,14 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0=None, E_Kr=None):
             order=2,
             surfaces=TUNGSTEN_SURFACES,
         )
-        recombination_flux_cupper = F.RecombinationFlux(Kr_0=2.9e-14,E_Kr=1.92,order=2,surfaces=TUNGSTEN_SURFACES)
+        recombination_flux_cupper = F.RecombinationFlux(Kr_0=2.9e-14,E_Kr=1.92,order=2,surfaces=id_poloidal_gap_Cu)
+        recombination_flux_top = F.RecombinationFlux(Kr_0=2.9e-14,E_Kr=1.92,order=2,surfaces=id_top_pipe)
+
         my_model.boundary_conditions = [
             recombination_flux_tungsten,
             recombination_flux_coolant,
             recombination_flux_cupper,
+            recombination_flux_top
         ]
 
     folder_inicond = "baking/steady_state_exposure"
@@ -75,7 +79,7 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0=None, E_Kr=None):
 
     my_model.dt = F.Stepsize(3000.0, stepsize_change_ratio=1.1)
 
-    export_folder = "baking/baking_temperature={:.0f}K".format(baking_temperature)
+    export_folder = "baking/{:.0f}mm-baking_temperature={:.0f}K".format(thickness,baking_temperature)
     if not instantaneous_recomb:
         export_folder += "/non_instant_recomb_Kr_0={:.2e}_E_Kr={:.2e}".format(
             Kr_0, E_Kr
@@ -89,7 +93,8 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0=None, E_Kr=None):
         + [
             F.SurfaceFlux(field="solute", surface=id_surf)
             for id_surf in [
-                id_poloidal_gap,
+                id_poloidal_gap_Cu,
+                id_poloidal_gap_W,
                 id_toroidal_gap,
                 id_bottom,
                 id_W_top,
@@ -120,8 +125,9 @@ if __name__ == "__main__":
     # run_steady_state_exposure()
 
     # run_baking(baking_temperature=673, instantaneous_recomb=True)
-    run_baking(
-        baking_temperature=473, instantaneous_recomb=False, Kr_0=3.2e-15, E_Kr=1.16
+    for temp in [473,498,513,538,573,598,623,673]:
+        run_baking(
+            baking_temperature=temp, instantaneous_recomb=True, Kr_0=3.2e-15, E_Kr=1.16, thickness=4
     )
 
 
