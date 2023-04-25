@@ -13,7 +13,7 @@ k_B = 8.617e-5
 
 
 def plot_inventory(baking_temperature, instant_recomb=True, verbose=False, **kwargs):
-    folder = "baking_temperature={:.0f}K/".format(baking_temperature)
+    folder = "d:/Logiciels/3d_monoblocks_bis/baking/baking_temperature={:.0f}K/".format(baking_temperature)
     if not instant_recomb:
         folder += "non_instant_recomb_Kr_0={:.2e}_E_Kr={:.2e}/".format(Kr_0, E_Kr)
     data = np.genfromtxt(
