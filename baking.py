@@ -46,32 +46,34 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0=None, E_Kr=None):
             order=2,
             surfaces=TUNGSTEN_SURFACES,
         )
+        recombination_flux_cupper = F.RecombinationFlux(Kr_0=2.9e-14,E_Kr=1.92,order=2,surfaces=TUNGSTEN_SURFACES)
         my_model.boundary_conditions = [
             recombination_flux_tungsten,
             recombination_flux_coolant,
+            recombination_flux_cupper,
         ]
 
     folder_inicond = "baking/steady_state_exposure"
     my_model.initial_conditions = [
         F.InitialCondition(
             field=1,
-            value=folder_inicond + "/trap_1_w.xdmf",
-            label="trap_1_w",
+            value=folder_inicond + "/trap_1_concentration.xdmf",
+            label="trap_1_concentration",
             time_step=-1,
         ),
         F.InitialCondition(
             field=2,
-            value=folder_inicond + "/trap_multi.xdmf",
-            label="trap_multi",
+            value=folder_inicond + "/trap_2_concentration.xdmf",
+            label="trap_2_concentration",
             time_step=-1,
         ),
     ]
 
     my_model.settings.transient = True
-    my_model.settings.final_time = 3600 * 24 * 30
+    my_model.settings.final_time = 3600 * 24 * 30.0
     my_model.settings.absolute_tolerance = 1e0
 
-    my_model.dt = F.Stepsize(3600, stepsize_change_ratio=1.1)
+    my_model.dt = F.Stepsize(3000.0, stepsize_change_ratio=1.1)
 
     export_folder = "baking/baking_temperature={:.0f}K".format(baking_temperature)
     if not instantaneous_recomb:
@@ -100,12 +102,12 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0=None, E_Kr=None):
     )
     my_model.exports = F.Exports(
         [
-            F.XDMFExport(
-                "solute", filename=export_folder + "/mobile_concentration.xdmf"
-            ),
-            F.XDMFExport("1", filename=export_folder + "/trap_1_w.xdmf"),
-            F.XDMFExport("2", filename=export_folder + "/trap_multi.xdmf"),
-            F.XDMFExport("retention", filename=export_folder + "/retention.xdmf"),
+    #        F.XDMFExport(
+    #            "solute", filename=export_folder + "/mobile_concentration.xdmf"
+    #        ),
+    #        F.XDMFExport("1", filename=export_folder + "/trap_1_w.xdmf"),
+    #        F.XDMFExport("2", filename=export_folder + "/trap_multi.xdmf"),
+    #        F.XDMFExport("retention", filename=export_folder + "/retention.xdmf"),
             derived_quantities,
         ]
     )
@@ -119,5 +121,8 @@ if __name__ == "__main__":
 
     # run_baking(baking_temperature=673, instantaneous_recomb=True)
     run_baking(
-        baking_temperature=520, instantaneous_recomb=False, Kr_0=3.2e-15, E_Kr=1.16
+        baking_temperature=473, instantaneous_recomb=False, Kr_0=3.2e-15, E_Kr=1.16
     )
+
+
+#   Anderl  10.1016/S0022-3115(98)00878-2 CuCrZe    Kr_0: 2.9e-14,     "act_energy": 1.92,
