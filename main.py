@@ -7,10 +7,11 @@ id_Cu = 7  # volume Cu
 id_CuCrZr = 8  # volume CuCrZr
 id_W_top = 9
 id_coolant = 10
-id_poloidal_gap = 11
-id_toroidal_gap = 12
-id_bottom = 13
-id_top_pipe = 14
+id_poloidal_gap_W = 11
+id_poloidal_gap_Cu = 12
+id_toroidal_gap = 13
+id_bottom = 14
+id_top_pipe = 15
 
 my_model = F.Simulation()
 
@@ -95,7 +96,7 @@ convective_heat_flux_coolant = F.ConvectiveFlux(
 
 heat_transfer_bcs = [heat_flux_top, convective_heat_flux_coolant]
 
-instantaneous_recombination_poloidal = F.DirichletBC(value=0, surfaces=id_poloidal_gap)
+instantaneous_recombination_poloidal = F.DirichletBC(value=0, surfaces=id_poloidal_gap_W+id_poloidal_gap_Cu)
 instantaneous_recombination_toroidal = F.DirichletBC(value=0, surfaces=id_toroidal_gap)
 instantaneous_recombination_bottom = F.DirichletBC(value=0, surfaces=id_bottom)
 instantaneous_recombination_top_pipe = F.DirichletBC(value=0, surfaces=id_top_pipe)
@@ -137,7 +138,7 @@ if __name__ == "__main__":
             F.TotalVolume(field="retention", volume=id_Cu),
             F.TotalVolume(field="retention", volume=id_CuCrZr),
             F.SurfaceFlux(field="solute", surface=id_coolant),
-            F.SurfaceFlux(field="solute", surface=id_poloidal_gap),
+            F.SurfaceFlux(field="solute", surface=id_poloidal_gap_Cu+id_poloidal_gap_W),
             F.SurfaceFlux(field="solute", surface=id_toroidal_gap),
             F.SurfaceFlux(field="solute", surface=id_top_pipe),
             F.SurfaceFlux(field="solute", surface=id_bottom),
@@ -151,6 +152,8 @@ if __name__ == "__main__":
             F.XDMFExport("T"),
             F.XDMFExport("solute"),
             F.XDMFExport("retention"),
+            F.XDMFExport("1",checkpoint=True),
+            F.XDMFExport("2",checkpoint=True),
         ]
     )
 
