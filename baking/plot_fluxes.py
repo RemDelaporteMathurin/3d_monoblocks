@@ -5,13 +5,16 @@ import numpy as np
 import matplotx
 from matplotx_proxy import label_fillbetween
 
+folder="//wsl$/Ubuntu-20.04/home/jmougenot/3d_monoblocks/baking/"
+
 id_W_top = 9
 id_coolant = 10
-id_poloidal_gap = 11
-id_toroidal_gap = 12
-id_bottom = 13
-id_top_pipe = 14
-TUNGSTEN_SURFACES = [id_poloidal_gap, id_toroidal_gap, id_bottom, id_W_top]
+id_poloidal_gap_W = 11
+id_poloidal_gap_Cu = 12
+id_toroidal_gap = 13
+id_bottom = 14
+id_top_pipe = 15
+TUNGSTEN_SURFACES = [id_poloidal_gap_W, id_toroidal_gap, id_bottom, id_W_top]
 
 
 def plot_flux(baking_temperature, tmax=None, normalised=True, **kwargs):
@@ -110,7 +113,7 @@ def plot_fluxes_stacked(
 
 def get_fluxes(baking_temperature, tmax, normalised):
     data = np.genfromtxt(
-        "baking_temperature={:.0f}K/derived_quantities.csv".format(baking_temperature),
+        folder+"4mm-baking_temperature={:.0f}K/non_instant_recomb_Kr_0=3.20e-15_E_Kr=1.16e+00/derived_quantities.csv".format(baking_temperature),
         delimiter=",",
         names=True,
     )
@@ -128,7 +131,9 @@ def get_fluxes(baking_temperature, tmax, normalised):
     toroidal_desorption = -data["Flux_surface_{}_solute".format(id_toroidal_gap)][
         indexes
     ]
-    poloidal_desorption = -data["Flux_surface_{}_solute".format(id_poloidal_gap)][
+    poloidal_desorption = -data["Flux_surface_{}_solute".format(id_poloidal_gap_W)][
+        indexes
+    ]-data["Flux_surface_{}_solute".format(id_poloidal_gap_Cu)][
         indexes
     ]
     coolant_desorption = -data["Flux_surface_{}_solute".format(id_coolant)][indexes]
@@ -201,7 +206,7 @@ def barchart_total_desorption(bake_temps):
     # correction for 673K
     # because the flux is so high, this correction is needed to acount for the initial step error
     ind_673 = bake_temps.index(673)
-    ind_600 = bake_temps.index(600)
+    ind_600 = bake_temps.index(623)
 
     total_600 = total_toks[ind_600] + total_coolants[ind_600]
     total_673 = total_toks[ind_673] + total_coolants[ind_673]
@@ -284,14 +289,14 @@ def flux_vs_time(bake_temps, min_T_colour, max_T_colour):
 
 
 def plot_results():
-    bake_temps = [500, 520, 550, 573, 600, 673]
+    bake_temps = [473,513,573,623,673]
     min_T_colour, max_T_colour = min(bake_temps) - 100, max(bake_temps)
 
     with plt.style.context(matplotx.styles.dufte):
 
         # ######### area plots
 
-        for T_baking in [500, 550, 673]:
+        for T_baking in [473,513,573,623,673]:
             evolution_fluxes_contributions(T_baking)
             plt.savefig(
                 "flux_contributions_proportion_vs_time_T={:.0f}K.pdf".format(T_baking)

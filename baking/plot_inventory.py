@@ -7,11 +7,12 @@ id_W = 6
 id_Cu = 7
 id_CuCrZr = 8
 
+root="//wsl$/Ubuntu-20.04/home/jmougenot/3d_monoblocks/baking/"
 
 def plot_inventory(baking_temperature, verbose=False, **kwargs):
 
     data = np.genfromtxt(
-        "baking_temperature={:.0f}K/derived_quantities.csv".format(baking_temperature),
+        root+"4mm-baking_temperature={:.0f}K/derived_quantities.csv".format(baking_temperature),
         delimiter=",",
         names=True,
     )
@@ -40,7 +41,7 @@ def plot_results(verbose=False):
     with plt.style.context(matplotx.styles.dufte):
         plt.figure(figsize=(6.4, 6))
         min_T_colour, max_T_colour = 400, 673
-        for T in [500, 673, 573, 550, 520, 600]:
+        for T in [473,498,513,538,573,598,623,673]:
             plot_inventory(
                 baking_temperature=T,
                 color=cm.Reds((T - min_T_colour) / (max_T_colour - min_T_colour)),

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<Xdmf Version="3.0">
+  <Domain>
+    <Grid GridType="Collection" CollectionType="Temporal" Name="trap_2_concentration">
+      <Grid Name="trap_2_concentration_0" GridType="Uniform">
+        <Topology NumberOfElements="95990" TopologyType="Tetrahedron" NodesPerElement="4">
+          <DataItem Dimensions="95990 4" NumberType="UInt" Format="HDF">trap_2_concentration.h5:trap_2_concentration/trap_2_concentration_0/mesh/topology</DataItem>
+        </Topology>
+        <Geometry GeometryType="XYZ">
+          <DataItem Dimensions="20304 3" Format="HDF">trap_2_concentration.h5:trap_2_concentration/trap_2_concentration_0/mesh/geometry</DataItem>
+        </Geometry>
+        <Time Value="0.000000000000000e+00" />
+        <Attribute ItemType="FiniteElementFunction" ElementFamily="DG" ElementDegree="1" ElementCell="tetrahedron" Name="trap_2_concentration" Center="Other" AttributeType="Scalar">
+          <DataItem Dimensions="383960 1" NumberType="UInt" Format="HDF">trap_2_concentration.h5:trap_2_concentration/trap_2_concentration_0/cell_dofs</DataItem>
+          <DataItem Dimensions="788224 1" NumberType="Float" Format="HDF">trap_2_concentration.h5:trap_2_concentration/trap_2_concentration_0/vector</DataItem>
+          <DataItem Dimensions="95991 1" NumberType="UInt" Format="HDF">trap_2_concentration.h5:trap_2_concentration/trap_2_concentration_0/x_cell_dofs</DataItem>
+          <DataItem Dimensions="95990 1" NumberType="UInt" Format="HDF">trap_2_concentration.h5:trap_2_concentration/trap_2_concentration_0/cells</DataItem>
+        </Attribute>
+      </Grid>
+    </Grid>
+  </Domain>
+</Xdmf>
