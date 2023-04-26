@@ -3,7 +3,9 @@ from main import (
     heat_transfer_bcs,
     h_implantation_top,
     recombination_flux_coolant,
-    instantaneous_recombination_poloidal,
+    instantaneous_recombination_coolant,
+    instantaneous_recombination_poloidal_W,
+    instantaneous_recombination_poloidal_Cu,
     instantaneous_recombination_top_pipe,
     instantaneous_recombination_bottom,
     instantaneous_recombination_toroidal,
@@ -17,12 +19,13 @@ import festim as F
 
 def add_bcs(model: F.Simulation, recomb: bool):
     h_transport_bcs = [recombination_flux_coolant]
+    h_transport_bcs.append(instantaneous_recombination_bottom)
 
     h_transport_bcs.append(instantaneous_recombination_toroidal)
     if recomb:
-        h_transport_bcs.append(instantaneous_recombination_poloidal)
-    # h_transport_bcs.append(instantaneous_recombination_bottom)
-    h_transport_bcs.append(instantaneous_recombination_top_pipe)
+        h_transport_bcs.append(instantaneous_recombination_poloidal_Cu)
+        h_transport_bcs.append(instantaneous_recombination_poloidal_W)
+        h_transport_bcs.append(instantaneous_recombination_top_pipe)
     h_transport_bcs.append(h_implantation_top)  # add it at the end
 
     model.boundary_conditions = heat_transfer_bcs + h_transport_bcs
@@ -47,7 +50,10 @@ def add_exports(model: F.Simulation, recomb: bool):
                 field="solute", surface=recombination_flux_coolant.surfaces[0]
             ),
             F.SurfaceFlux(
-                field="solute", surface=instantaneous_recombination_poloidal.surfaces[0]
+                field="solute", surface=instantaneous_recombination_poloidal_W.surfaces[0]
+            ),
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_poloidal_Cu.surfaces[0]
             ),
             F.SurfaceFlux(
                 field="solute", surface=instantaneous_recombination_top_pipe.surfaces[0]
@@ -68,16 +74,18 @@ def add_exports(model: F.Simulation, recomb: bool):
             F.XDMFExport("T", folder=folder),
             F.XDMFExport("solute", folder=folder),
             F.XDMFExport("retention", folder=folder),
+            F.XDMFExport("1", folder=folder,checkpoint=True),
+            F.XDMFExport("2", folder=folder,checkpoint=True),
         ]
     )
 
 
 my_model.settings.transient = True
-my_model.settings.final_time = 1e6
+my_model.settings.final_time = 1e7#31536000.0
 
 # with instantaneous recombination
 my_model.t = 0
-my_model.dt = F.Stepsize(initial_value=1e3, stepsize_change_ratio=1.1)
+my_model.dt = F.Stepsize(initial_value=3600.0, stepsize_change_ratio=1.15)
 
 add_bcs(my_model, recomb=True)
 add_exports(my_model, recomb=True)
@@ -88,7 +96,7 @@ my_model.run()
 
 # without instantaneous recombination
 my_model.t = 0
-my_model.dt = F.Stepsize(initial_value=1e3, stepsize_change_ratio=1.1)
+my_model.dt = F.Stepsize(initial_value=3600.0, stepsize_change_ratio=1.15)
 
 add_bcs(my_model, recomb=False)
 add_exports(my_model, recomb=False)

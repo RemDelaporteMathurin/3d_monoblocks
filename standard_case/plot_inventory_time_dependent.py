@@ -2,12 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotx
 
+folder="//wsl$/Ubuntu-20.04/home/jmougenot/3d_monoblocks/standard_case/"
 
 data_recomb = np.genfromtxt(
-    "instant_recomb/derived_quantities.csv", delimiter=",", names=True
+    folder+"instant_recomb/derived_quantities.csv", delimiter=",", names=True
 )
 data_no_recomb = np.genfromtxt(
-    "no_recomb/derived_quantities.csv", delimiter=",", names=True
+    folder+"no_recomb/derived_quantities.csv", delimiter=",", names=True
 )
 
 inventory_no_recomb = sum(
@@ -46,7 +47,7 @@ with plt.style.context(matplotx.styles.dufte):
     )
     plt.yscale("log")
     # plt.ylim(bottom=0)
-    plt.ylim(1e14, 1e16)
+    plt.ylim(1e14, 1e19)
     matplotx.ylabel_top("Inventory (H)")
     plt.xscale("log")
     matplotx.line_labels()

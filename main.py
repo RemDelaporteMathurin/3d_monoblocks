@@ -101,6 +101,7 @@ instantaneous_recombination_poloidal_Cu = F.DirichletBC(value=0, surfaces=id_pol
 instantaneous_recombination_toroidal = F.DirichletBC(value=0, surfaces=id_toroidal_gap)
 instantaneous_recombination_bottom = F.DirichletBC(value=0, surfaces=id_bottom)
 instantaneous_recombination_top_pipe = F.DirichletBC(value=0, surfaces=id_top_pipe)
+instantaneous_recombination_coolant = F.DirichletBC(value=0, surfaces=id_coolant)
 
 recombination_poloidal_W = F.RecombinationFlux(
     Kr_0=3.2e-15, E_Kr=1.16, order=2, surfaces=id_poloidal_gap_W
@@ -138,6 +139,7 @@ h_transport_bcs = [
     instantaneous_recombination_bottom,
     instantaneous_recombination_top_pipe,
     recombination_top_pipe,
+    instantaneous_recombination_coolant,
 ]
 
 
