@@ -155,6 +155,6 @@ def run_mb(thickness: float, instant_recomb: int, transient: bool, gap: bool):
 
 # parametric study thickness
 for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
-    for gap in [False]:
+    for gap in [True, False]:
         for recomb in [0,1]:
-            run_mb(thickness, instant_recomb=recomb, transient=True, gap=gap)
+            run_mb(thickness, instant_recomb=recomb, transient=False, gap=gap)

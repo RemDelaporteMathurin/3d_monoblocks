@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotx
 
-root="//wsl$/Ubuntu-20.04/home/jmougenot/3d_monoblocks/results/"
+root="//wsl$/Ubuntu-18.04/home/jmougenot/3d_monoblocks/results/"
 
 thicknesses = [4, 5, 6, 7, 8, 9, 10, 14]
 avg_Ts_no_gap = []

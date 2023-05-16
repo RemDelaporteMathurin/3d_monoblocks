@@ -7,15 +7,24 @@ id_W = 6
 id_Cu = 7
 id_CuCrZr = 8
 
-root="//wsl$/Ubuntu-20.04/home/jmougenot/3d_monoblocks/baking/"
+
+
+folder="//wsl$/Ubuntu-18.04/home/jmougenot/3d_monoblocks/baking/"
 
 def plot_inventory(baking_temperature, verbose=False, **kwargs):
 
-    data = np.genfromtxt(
-        root+"4mm-baking_temperature={:.0f}K/derived_quantities.csv".format(baking_temperature),
-        delimiter=",",
-        names=True,
-    )
+    if recomb:
+        data = np.genfromtxt(
+            folder+"4mm-baking_temperature={:.0f}K/non_instant_recomb_Kr_0=3.20e-15_E_Kr=1.16e+00/derived_quantities.csv".format(baking_temperature),
+            delimiter=",",
+            names=True,
+        )
+    else:
+        data = np.genfromtxt(
+            folder+"4mm-baking_temperature={:.0f}K/derived_quantities.csv".format(baking_temperature),
+            delimiter=",",
+            names=True,
+        )
 
     inventory = sum(
         [
@@ -38,27 +47,41 @@ def plot_inventory(baking_temperature, verbose=False, **kwargs):
 
 
 def plot_results(verbose=False):
-    with plt.style.context(matplotx.styles.dufte):
-        plt.figure(figsize=(6.4, 6))
-        min_T_colour, max_T_colour = 400, 673
-        for T in [473,498,513,538,573,598,623,673]:
-            plot_inventory(
-                baking_temperature=T,
-                color=cm.Reds((T - min_T_colour) / (max_T_colour - min_T_colour)),
-                verbose=verbose,
-            )
+    
+    plt.figure(figsize=(6.4, 6))
+    min_T_colour, max_T_colour = 400, 673
+    for T in [473,498,513,538,573,598,623,673]:
+        plot_inventory(
+            baking_temperature=T,
+            color=cm.Reds((T - min_T_colour) / (max_T_colour - min_T_colour)),
+            verbose=verbose,
+        )
 
-        # label axis
-        matplotx.ylabel_top("Relative \n inventory (%)")
-        plt.xlabel("Baking time (days)")
-        plt.ylim(bottom=-5)
+    # label axis
+    plt.ylabel("Relative inventory (%)")
+    plt.xlabel("Baking time (days)")
+    plt.ylim(bottom=-2)
+    plt.xlim([0, 30])
+    
+    matplotx.line_labels()
 
-        matplotx.line_labels()
+    plt.grid()
+    #plt.savefig("relative_inventory_vs_time.pdf")
+
+    if recomb:
+        plt.title('Non instantaneous recombination')
         plt.tight_layout()
-        plt.savefig("relative_inventory_vs_time.pdf")
+        plt.savefig(folder+'recomb_baking_inventory.png',dpi=900)
+    else:
+        plt.title('Instantaneous recombination')
+        plt.tight_layout()
+        plt.savefig(folder+'baking_inventory.png',dpi=900)
 
-        plt.show()
+    plt.show()
+
 
 
 if __name__ == "__main__":
-    plot_results(verbose=True)
+
+    for recomb in [True, False]:
+        plot_results(verbose=True)

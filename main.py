@@ -125,6 +125,7 @@ recombination_top_pipe = F.RecombinationFlux(
 
 h_implantation_top = F.ImplantationDirichlet(
     surfaces=id_W_top, phi=1.61e22, R_p=9.52e-10, D_0=4.1e-7, E_D=0.39
+    #surfaces=id_W_top, phi=1.0e24, R_p=8e-10, D_0=4.1e-7, E_D=0.39
 )
 
 h_transport_bcs = [
@@ -163,8 +164,8 @@ if __name__ == "__main__":
             F.TotalVolume(field="retention", volume=id_Cu),
             F.TotalVolume(field="retention", volume=id_CuCrZr),
             F.SurfaceFlux(field="solute", surface=id_coolant),
-            F.SurfaceFlux(field="solute", surface=id_poloidal_gap_Cu),
             F.SurfaceFlux(field="solute", surface=id_poloidal_gap_W),
+            F.SurfaceFlux(field="solute", surface=id_poloidal_gap_Cu),
             F.SurfaceFlux(field="solute", surface=id_toroidal_gap),
             F.SurfaceFlux(field="solute", surface=id_top_pipe),
             F.SurfaceFlux(field="solute", surface=id_bottom),

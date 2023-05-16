@@ -1,4 +1,5 @@
 import festim as F
+import sympy as sp
 
 from main import (
     my_model,
@@ -32,7 +33,8 @@ def run_steady_state_exposure():
 
 
 def run_baking(baking_temperature, instantaneous_recomb, Kr_0=None, E_Kr=None, thickness=4):
-    my_model.T = F.Temperature(baking_temperature)
+    #my_model.T = F.Temperature(baking_temperature)
+    my_model.T = F.Temperature(value=sp.Piecewise((343+(baking_temperature-343)*F.t/600, F.t < 600), (baking_temperature, True)))
 
     if instantaneous_recomb:
         instantaneous_recomb_everywhere = F.DirichletBC(
@@ -77,7 +79,7 @@ def run_baking(baking_temperature, instantaneous_recomb, Kr_0=None, E_Kr=None, t
     my_model.settings.final_time = 3600 * 24 * 30.0
     my_model.settings.absolute_tolerance = 1e0
 
-    my_model.dt = F.Stepsize(3000.0, stepsize_change_ratio=1.1)
+    my_model.dt = F.Stepsize(50.0, stepsize_change_ratio=1.1)
 
     export_folder = "baking/{:.0f}mm-baking_temperature={:.0f}K".format(thickness,baking_temperature)
     if not instantaneous_recomb:
@@ -127,7 +129,7 @@ if __name__ == "__main__":
     # run_baking(baking_temperature=673, instantaneous_recomb=True)
     for temp in [473,498,513,538,573,598,623,673]:
         run_baking(
-            baking_temperature=temp, instantaneous_recomb=True, Kr_0=3.2e-15, E_Kr=1.16, thickness=4
+            baking_temperature=temp, instantaneous_recomb=False, Kr_0=3.2e-15, E_Kr=1.16, thickness=4
     )
 
 

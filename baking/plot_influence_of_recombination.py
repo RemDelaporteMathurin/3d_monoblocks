@@ -11,7 +11,7 @@ Kr_0 = 3.2e-15
 E_Kr = 1.16
 k_B = 8.617e-5
 
-root="//wsl$/Ubuntu-20.04/home/jmougenot/3d_monoblocks/baking/"
+root="//wsl$/Ubuntu-18.04/home/jmougenot/3d_monoblocks/baking/"
 
 def plot_inventory(baking_temperature, instant_recomb=True, verbose=False, **kwargs):
     folder = root+"4mm-baking_temperature={:.0f}K/".format(baking_temperature)
@@ -39,24 +39,31 @@ def plot_inventory(baking_temperature, instant_recomb=True, verbose=False, **kwa
 
 
 if __name__ == "__main__":
-    T = np.linspace(500, 673, num=100)
+    T = np.linspace(473, 673, num=100)
     Anderl_recomb = Kr_0 * np.exp(-E_Kr / k_B / T)
     Ogorodnikova_recomb = 3e-25 / T**0.5 * np.exp(2.06 / k_B / T)
+    Cupper_recomb = 2.9e-14 * np.exp(-1.92 / k_B / T)
 
     #with plt.style.context(matplotx.styles.dufte):
-    plt.plot(T, Anderl_recomb, label="Anderl")
-    plt.plot(T, Ogorodnikova_recomb, label="Ogorodnikova")
+    plt.plot(T, Anderl_recomb, label="W (Anderl)")
+    plt.plot(T, Ogorodnikova_recomb, label="W (Ogorodnikova)")
+    plt.plot(T, Cupper_recomb, label="Cu (Anderl)")
     # plt.ylim(bottom=0)
     plt.yscale("log")
-    matplotx.line_labels()
-    matplotx.ylabel_top("Recombination \n coefficient \n (m$^4$ s$^{-1}$)")
+    #matplotx.line_labels()
+    plt.legend()
+    plt.grid()
+    plt.xlim(473,673)
+    plt.ylabel("Recombination coefficient (m$^4$ s$^{-1}$)")
     plt.xlabel("Temperature (K)")
     plt.tight_layout()
+    plt.savefig(root+'/coef_recom.png',dpi=300)
     plt.show()
+
 
     plt.figure()
     min_T_colour, max_T_colour = 453, 693
-    for T in [473,513,573,623,673]:
+    for T in [473,498,513,538,573,598,623,673]:
         plot_inventory(
             baking_temperature=T,
             label="{} K ({}°C)".format(T,T-273),

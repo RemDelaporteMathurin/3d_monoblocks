@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotx
 
-root="//wsl$/Ubuntu-20.04/home/jmougenot/3d_monoblocks/results/"
+root="//wsl$/Ubuntu-18.04/home/jmougenot/3d_monoblocks/results/"
 
 transient = False
 thicknesses = [4, 5, 6, 7, 8, 9, 10, 14]
@@ -65,19 +65,20 @@ difference = [100 * abs(w - wo) / w for w, wo in zip(retention_w, retention_wo)]
 plt.plot(
     thicknesses,
     retention_w,
-    color="tab:blue",
-    label="Instantaneous \n recombination",
+    color="tab:orange",
+    label="Case B: Instantaneous recombination",
 )
-plt.plot(thicknesses, retention_wo, color="tab:blue", label="No recombination")
-plt.plot(thicknesses, retention_wo_nogap, color="tab:blue", linestyle='dashed',label="No gap")
-plt.plot(thicknesses, retention_w_nogap, color="tab:blue", linestyle='dashed',label="No gap")
+plt.plot(thicknesses, retention_w_nogap, color="tab:orange", linestyle='dashed',label="Case B: Instantaneous recombination (no CuCrZr pipe extrusion)")
+plt.plot(thicknesses, retention_wo, color="tab:blue", label="Case A: No recombination on the poloidal gap")
+plt.plot(thicknesses, retention_wo_nogap, color="tab:blue", linestyle='dashed',label="Case A: No recombination on the poloidal gap (no CuCrZr pipe extrusion)")
 plt.fill_between(thicknesses, retention_w, retention_wo, alpha=0.3)
 #plt.plot(thicknesses, retention_wp, color="tab:red", label="Recombination on Cu parts")
 plt.ylabel("Inventory per unit thickness (H/m) \n")
 # plt.yscale("log")
 plt.xlim(4,14)
-plt.ylim(1e17,3e20)
-matplotx.line_labels()
+plt.ylim(1e16,1e21)
+#matplotx.line_labels()
+plt.legend(fontsize="8")
 
 #plt.sca(axs[1])
 
@@ -90,4 +91,8 @@ plt.yscale("log")
 if ~transient: plt.title("Steady-sate exposure")
 if transient: plt.title("Exposure of {}s".format(time))
 plt.tight_layout()
+
+
+plt.savefig(root+"/thickness_inventory.png",dpi=900)
+
 plt.show()
