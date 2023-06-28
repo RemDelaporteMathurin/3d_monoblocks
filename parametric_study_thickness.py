@@ -3,10 +3,15 @@ from main import (
     heat_transfer_bcs,
     h_implantation_top,
     recombination_flux_coolant,
-    instantaneous_recombination_poloidal,
+    instantaneous_recombination_poloidal_W,
+    instantaneous_recombination_poloidal_Cu,
     instantaneous_recombination_top_pipe,
     instantaneous_recombination_bottom,
     instantaneous_recombination_toroidal,
+    recombination_poloidal_W,
+    recombination_poloidal_Cu,
+    recombination_toroidal,
+    recombination_top_pipe,
     tungsten,
     copper,
     cucrzr,
@@ -28,10 +33,17 @@ class AverageSurface(F.DerivedQuantity):
 
 
 def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
+    """Runs a MB simulation
+
+    Args:
+        thickness (float): the poloidal thickness
+        instant_recomb (bool): If True, instantaneous recombination will be
+            assumed on poloidal surfaces. Else, isolated.
+        transient (bool): if True, transient sim, else steady state.
+        gap (bool): if True, an extrusion on the CuCrZr pipe is modelled.
+    """
     print(
-        "\n Running for {} mm  Transient: {} Recomb: {} Gap : {} \n".format(
-            thickness, transient, instant_recomb, gap
-        )
+        f"\n Running for {thickness} mm  Transient: {transient} Recomb: {instant_recomb} Gap : {gap} \n"
     )
 
     folder = "meshes/{}mm_thickness".format(thickness)
@@ -55,6 +67,7 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
     else:
         folder += "/no_recomb"
 
+
     if not gap:
         folder += "/no_gap"
 
@@ -72,7 +85,10 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
                 field="solute", surface=recombination_flux_coolant.surfaces[0]
             ),
             F.SurfaceFlux(
-                field="solute", surface=instantaneous_recombination_poloidal.surfaces[0]
+                field="solute", surface=instantaneous_recombination_poloidal_W.surfaces[0]
+            ),
+            F.SurfaceFlux(
+                field="solute", surface=instantaneous_recombination_poloidal_Cu.surfaces[0]
             ),
             F.SurfaceFlux(
                 field="solute", surface=instantaneous_recombination_bottom.surfaces[0]
@@ -96,27 +112,31 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
             F.XDMFExport("T", folder=folder),
             F.XDMFExport("solute", folder=folder),
             F.XDMFExport("retention", folder=folder),
+            F.XDMFExport("1", folder=folder,checkpoint=True),
+            F.XDMFExport("2", folder=folder,checkpoint=True),
         ]
     )
 
     h_transport_bcs = [recombination_flux_coolant]
     my_model.boundary_conditions = heat_transfer_bcs + h_transport_bcs
-
     my_model.boundary_conditions.append(instantaneous_recombination_toroidal)
+    my_model.boundary_conditions.append(instantaneous_recombination_bottom)
+
 
     if instant_recomb:
-        my_model.boundary_conditions.append(instantaneous_recombination_poloidal)
-        # my_model.boundary_conditions.append(instantaneous_recombination_bottom)
+        my_model.boundary_conditions.append(instantaneous_recombination_poloidal_W)
+        my_model.boundary_conditions.append(instantaneous_recombination_poloidal_Cu)
         if gap:
             my_model.boundary_conditions.append(instantaneous_recombination_top_pipe)
+
 
     my_model.boundary_conditions.append(h_implantation_top)  # add it at the end
 
     if transient:
         my_model.t = 0
-        my_model.dt = F.Stepsize(initial_value=1e4, stepsize_change_ratio=1.1)
+        my_model.dt = F.Stepsize(initial_value=1e5, stepsize_change_ratio=1.1)
         my_model.settings.transient = True
-        my_model.settings.final_time = 1e4
+        my_model.settings.final_time = 1e5
     else:
         my_model.dt = None
         my_model.settings.transient = False
@@ -128,6 +148,6 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
 
 # parametric study thickness
 for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
-    for gap in [False, True]:
+    for gap in [True, False]:
         for instant_recomb in [True, False]:
-            run_mb(thickness, instant_recomb=instant_recomb, transient=True, gap=gap)
+            run_mb(thickness, instant_recomb=instant_recomb, transient=False, gap=gap)

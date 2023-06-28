@@ -48,8 +48,10 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
     geompy.UnionIDs(top_surface, [31])
     cooling_surface = geompy.CreateGroup(scaled_geometry, geompy.ShapeType["FACE"])
     geompy.UnionIDs(cooling_surface, [84])
-    poloidal_gap = geompy.CreateGroup(scaled_geometry, geompy.ShapeType["FACE"])
-    geompy.UnionIDs(poloidal_gap, [22, 89])
+    poloidal_gap_W = geompy.CreateGroup(scaled_geometry, geompy.ShapeType["FACE"])
+    geompy.UnionIDs(poloidal_gap_W, [22])
+    poloidal_gap_Cu = geompy.CreateGroup(scaled_geometry, geompy.ShapeType["FACE"])
+    geompy.UnionIDs(poloidal_gap_Cu, [89])
     toroidal_gap = geompy.CreateGroup(scaled_geometry, geompy.ShapeType["FACE"])
     geompy.UnionIDs(toroidal_gap, [5])
     bottom = geompy.CreateGroup(scaled_geometry, geompy.ShapeType["FACE"])
@@ -66,7 +68,8 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
     geompy.addToStudyInFather(scaled_geometry, cucrzr, "cucrzr")
     geompy.addToStudyInFather(scaled_geometry, top_surface, "top_surface")
     geompy.addToStudyInFather(scaled_geometry, cooling_surface, "cooling_surface")
-    geompy.addToStudyInFather(scaled_geometry, poloidal_gap, "poloidal_gap")
+    geompy.addToStudyInFather(scaled_geometry, poloidal_gap_W, "poloidal_gap_W")
+    geompy.addToStudyInFather(scaled_geometry, poloidal_gap_Cu, "poloidal_gap_Cu")
     geompy.addToStudyInFather(scaled_geometry, toroidal_gap, "toroidal_gap")
     geompy.addToStudyInFather(scaled_geometry, bottom, "bottom")
 
@@ -102,7 +105,8 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
     cooling_surface_1 = Mesh_1.GroupOnGeom(
         cooling_surface, "cooling_surface", SMESH.FACE
     )
-    poloidal_gap_1 = Mesh_1.GroupOnGeom(poloidal_gap, "poloidal_gap", SMESH.FACE)
+    poloidal_gap_1 = Mesh_1.GroupOnGeom(poloidal_gap_W, "poloidal_gap_W", SMESH.FACE)
+    poloidal_gap_2 = Mesh_1.GroupOnGeom(poloidal_gap_Cu, "poloidal_gap_Cu", SMESH.FACE)
     toroidal_gap_1 = Mesh_1.GroupOnGeom(toroidal_gap, "toroidal_gap", SMESH.FACE)
     bottom_1 = Mesh_1.GroupOnGeom(bottom, "bottom", SMESH.FACE)
 
@@ -122,6 +126,7 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
         top_surface_1,
         cooling_surface_1,
         poloidal_gap_1,
+        poloidal_gap_2,
         toroidal_gap_1,
         bottom_1,
     ] = Mesh_1.GetGroups()
@@ -132,7 +137,8 @@ for thickness in [4, 5, 6, 7, 8, 9, 10, 14]:
     smesh.SetName(NETGEN_3D_Parameters_1, "NETGEN 3D Parameters_1")
     smesh.SetName(top_surface_1, "top_surface")
     smesh.SetName(cooling_surface_1, "cooling_surface")
-    smesh.SetName(poloidal_gap_1, "poloidal_gap")
+    smesh.SetName(poloidal_gap_1, "poloidal_gap_W")
+    smesh.SetName(poloidal_gap_2, "poloidal_gap_Cu")
     smesh.SetName(toroidal_gap_1, "toroidal_gap")
     smesh.SetName(bottom_1, "bottom")
     smesh.SetName(Mesh_1.GetMesh(), "Mesh_1")

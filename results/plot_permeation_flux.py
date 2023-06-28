@@ -6,7 +6,7 @@ transient = True
 thicknesses = [4, 5, 6, 7, 8, 9, 10, 14]
 flux_w = []
 flux_wo = []
-time = 1e4
+time = 1e5
 id_coolant = 10
 for instant_recomb in [True, False]:
     for thickness in thicknesses:
@@ -59,5 +59,8 @@ with plt.style.context(matplotx.styles.dufte):
     plt.xlabel("Thickness $e$ (mm)")
     plt.plot(thicknesses, difference, color="tab:orange")
     plt.ylim(bottom=0)
+    plt.xticks([4, 6, 8, 10, 12, 14])
     plt.tight_layout()
+    fig.subplots_adjust(top=0.8, hspace=0.7)
+    plt.savefig("permeation_flux_vs_thickness.pdf")
     plt.show()

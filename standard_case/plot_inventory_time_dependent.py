@@ -4,10 +4,17 @@ import matplotx
 
 
 data_recomb = np.genfromtxt(
-    "instant_recomb/derived_quantities.csv", delimiter=",", names=True
+    "transient/instant_recomb/derived_quantities.csv", delimiter=",", names=True
 )
 data_no_recomb = np.genfromtxt(
-    "no_recomb/derived_quantities.csv", delimiter=",", names=True
+    "transient/no_recomb/derived_quantities.csv", delimiter=",", names=True
+)
+
+data_recomb_s = np.genfromtxt(
+    "steady_state/instant_recomb/derived_quantities.csv", delimiter=",", names=True
+)
+data_no_recomb_s = np.genfromtxt(
+    "steady_state/no_recomb/derived_quantities.csv", delimiter=",", names=True
 )
 
 inventory_no_recomb = sum(
@@ -24,10 +31,9 @@ difference = [
     100 * abs(w - wo) / w for w, wo in zip(inventory_recomb, inventory_no_recomb)
 ]
 
-with plt.style.context(matplotx.styles.dufte):
-    fig, axs = plt.subplots(2, 1, sharex=True, figsize=(6.4, 4.8*1.2), gridspec_kw={'height_ratios': [2, 1]})
-    plt.sca(axs[0])
 
+with plt.style.context(matplotx.styles.dufte):
+    plt.figure(figsize=(7, 5))
     plt.plot(
         data_no_recomb["ts"],
         inventory_no_recomb,
@@ -46,16 +52,15 @@ with plt.style.context(matplotx.styles.dufte):
     )
     plt.yscale("log")
     # plt.ylim(bottom=0)
-    plt.ylim(1e14, 1e16)
+    plt.ylim(1e13, 1e18)
     matplotx.ylabel_top("Inventory (H)")
     plt.xscale("log")
+    plt.xlim(1e3, 1e7)
+    plt.xticks([1e3, 1e4, 1e5, 1e6, 1e7])
     matplotx.line_labels()
-    plt.tight_layout()
-    plt.sca(axs[1])
-
     plt.xlabel("Time (s)")
-    plt.plot(data_no_recomb["ts"], difference)
-    plt.ylim(bottom=0, top=1000)
-    matplotx.ylabel_top("Relative \n difference (%)")
     plt.tight_layout()
+    plt.savefig("inventory_standard_case_w_wo_recomb.pdf")
+    plt.savefig("inventory_standard_case_w_wo_recomb.png")
+
     plt.show()

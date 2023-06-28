@@ -2,15 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotx
 
-transient = True
+root="//wsl$/Ubuntu-20.04/home/jmougenot/3d_monoblocks/results/"
+
+transient = False
 thicknesses = [4, 5, 6, 7, 8, 9, 10, 14]
 flux_w = []
 flux_wo = []
-time = 1e4
+time = 0
 id_coolant = 10
 for instant_recomb in [True, False]:
     for thickness in thicknesses:
-        folder = "{}mm_thickness".format(thickness)
+        folder = root+"{}mm_thickness".format(thickness)
         if transient:
             folder += "/transient"
         else:

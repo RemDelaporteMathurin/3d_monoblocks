@@ -2,13 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotx
 
+root="//wsl$/Ubuntu-18.04/home/jmougenot/3d_monoblocks/results/"
+
 thicknesses = [4, 5, 6, 7, 8, 9, 10, 14]
 avg_Ts_no_gap = []
 avg_Ts_gap = []
-time = 1e4
+time = 1e5
 id_coolant = 10
 for thickness in thicknesses:
-    folder = "{}mm_thickness/transient/instant_recomb/".format(thickness)
+    folder = root+"{}mm_thickness/transient/instant_recomb".format(thickness)
 
     data_gap = np.genfromtxt(
         "{}/derived_quantities.csv".format(folder), delimiter=",", names=True
