@@ -11,10 +11,8 @@ Kr_0 = 3.2e-15
 E_Kr = 1.16
 k_B = 8.617e-5
 
-root="//wsl$/Ubuntu-18.04/home/jmougenot/3d_monoblocks/baking/"
-
 def plot_inventory(baking_temperature, instant_recomb=True, verbose=False, **kwargs):
-    folder = root+"4mm-baking_temperature={:.0f}K/".format(baking_temperature)
+    folder = "4mm-baking_temperature={:.0f}K/".format(baking_temperature)
     if not instant_recomb:
         folder += "non_instant_recomb_Kr_0={:.2e}_E_Kr={:.2e}/".format(Kr_0, E_Kr)
     data = np.genfromtxt(
@@ -57,7 +55,7 @@ if __name__ == "__main__":
     plt.ylabel("Recombination coefficient (m$^4$ s$^{-1}$)")
     plt.xlabel("Temperature (K)")
     plt.tight_layout()
-    plt.savefig(root+'/coef_recom.png',dpi=300)
+    plt.savefig('coef_recom.png',dpi=300)
     plt.show()
 
 
