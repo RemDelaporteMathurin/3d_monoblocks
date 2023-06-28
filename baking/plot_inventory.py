@@ -66,10 +66,10 @@ def plot_results(verbose=False):
 
         if recomb:
             plt.tight_layout()
-            plt.savefig("instant_recomb_relative_inventory_vs_time.pdf")
+            plt.savefig("noninstant_recomb_relative_inventory_vs_time.pdf")
         else:
             plt.tight_layout()
-            plt.savefig("noninstant_recomb_relative_inventory_vs_time.pdf")
+            plt.savefig("instant_recomb_relative_inventory_vs_time.pdf")
 
 
         plt.show()
