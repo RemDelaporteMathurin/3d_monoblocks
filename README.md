@@ -40,7 +40,7 @@ Run a FEniCS container:
 docker run -ti -v ${PWD}:/home/fenics/shared quay.io/fenicsproject/stable:latest
 ```
 
-Install the dev version of FESTIM:
+Install FESTIM:
 
 ```
 pip install festim==0.10.2
