@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotx
 
-# folder="//wsl$/Ubuntu-18.04/home/jmougenot/3d_monoblocks/standard_case/"
 
 data_recomb = np.genfromtxt(
     "transient/instant_recomb/derived_quantities.csv", delimiter=",", names=True
