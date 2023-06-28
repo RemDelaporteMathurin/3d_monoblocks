@@ -10,15 +10,15 @@ id_CuCrZr = 8
 
 def plot_inventory(baking_temperature, verbose=False, **kwargs):
 
-    if recomb:
+    if instant_recomb:
         data = np.genfromtxt(
-            "4mm-baking_temperature={:.0f}K/non_instant_recomb_Kr_0=3.20e-15_E_Kr=1.16e+00/derived_quantities.csv".format(baking_temperature),
+            "4mm-baking_temperature={:.0f}K/derived_quantities.csv".format(baking_temperature),
             delimiter=",",
             names=True,
         )
     else:
         data = np.genfromtxt(
-            "4mm-baking_temperature={:.0f}K/derived_quantities.csv".format(baking_temperature),
+            "4mm-baking_temperature={:.0f}K/non_instant_recomb_Kr_0=3.20e-15_E_Kr=1.16e+00/derived_quantities.csv".format(baking_temperature),
             delimiter=",",
             names=True,
         )
@@ -64,17 +64,17 @@ def plot_results(verbose=False):
 
         #plt.savefig("relative_inventory_vs_time.pdf")
 
-        if recomb:
-            plt.tight_layout()
-            plt.savefig("noninstant_recomb_relative_inventory_vs_time.pdf")
-        else:
+        if instant_recomb:
             plt.tight_layout()
             plt.savefig("instant_recomb_relative_inventory_vs_time.pdf")
+        else:
+            plt.tight_layout()
+            plt.savefig("noninstant_recomb_relative_inventory_vs_time.pdf")
 
 
         plt.show()
 
 if __name__ == "__main__":
 
-    for recomb in [True, False]:
+    for instant_recomb in [True, False]:
         plot_results(verbose=True)

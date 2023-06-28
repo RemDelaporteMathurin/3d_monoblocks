@@ -5,7 +5,7 @@ import numpy as np
 import matplotx
 from matplotx_proxy import label_fillbetween
 
-recomb=False
+instant_recomb = True
 
 id_W_top = 9
 id_coolant = 10
@@ -83,15 +83,15 @@ def plot_fluxes_stacked(
 
 def get_fluxes(baking_temperature, tmax, normalised):
 
-    if recomb:
+    if instant_recomb:
         data = np.genfromtxt(
-            "4mm-baking_temperature={:.0f}K/non_instant_recomb_Kr_0=3.20e-15_E_Kr=1.16e+00/derived_quantities.csv".format(baking_temperature),
+            "4mm-baking_temperature={:.0f}K/derived_quantities.csv".format(baking_temperature),
             delimiter=",",
             names=True,
         )
     else:
         data = np.genfromtxt(
-            "4mm-baking_temperature={:.0f}K/derived_quantities.csv".format(baking_temperature),
+            "4mm-baking_temperature={:.0f}K/non_instant_recomb_Kr_0=3.20e-15_E_Kr=1.16e+00/derived_quantities.csv".format(baking_temperature),
             delimiter=",",
             names=True,
         )
@@ -222,10 +222,10 @@ def plot_results():
 
     for T_baking in [498,623]:
         evolution_fluxes_contributions(T_baking)
-        if recomb:
-            plt.savefig(f'flux_contributions_proportion_vs_time_T={T_baking:.0f}K_noninstant_recomb.pdf')
-        else:
+        if instant_recomb:
             plt.savefig(f'flux_contributions_proportion_vs_time_T={T_baking:.0f}K.pdf')
+        else:
+            plt.savefig(f'flux_contributions_proportion_vs_time_T={T_baking:.0f}K_noninstant_recomb.pdf')
 
     plt.figure()
     barchart_total_desorption(bake_temps)
@@ -234,13 +234,12 @@ def plot_results():
     plt.legend()
     plt.ylim([0, 1.6e14])
     plt.tight_layout()
-    if recomb:
-        plt.title('Non instantaneous recombination')
-        plt.savefig('recomb_baking_total_desorption.png',dpi=300)
-    else:
+    if instant_recomb:
         plt.title('Instantaneous recombination')
         plt.savefig('baking_total_desorption.png',dpi=300)
-
+    else:
+        plt.title('Non instantaneous recombination')
+        plt.savefig('recomb_baking_total_desorption.png',dpi=300)
     plt.show()
 
 
