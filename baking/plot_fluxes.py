@@ -5,7 +5,6 @@ import numpy as np
 import matplotx
 from matplotx_proxy import label_fillbetween
 
-folder="//wsl$/Ubuntu-18.04/home/jmougenot/3d_monoblocks/baking/"
 recomb=False
 
 id_W_top = 9
@@ -77,52 +76,22 @@ def plot_fluxes_stacked(
 
         return orange_rgb
 
-    plt.fill_between(t, poloidal_desorption, color=blue(0), label="Poloidal gap")
-    plt.fill_between(
-        t,
-        poloidal_desorption,
-        poloidal_desorption + top_desorption,
-        color=blue(0.2),
-        label="Top",
-    )
-    plt.fill_between(
-        t,
-        poloidal_desorption + top_desorption,
-        poloidal_desorption + top_desorption + toroidal_desorption,
-        color=blue(0.4),
-        label="Toroidal gap",
-    )
-    plt.fill_between(
-        t,
-        top_desorption + poloidal_desorption + toroidal_desorption,
-        top_desorption + poloidal_desorption + toroidal_desorption + coolant_desorption,
-        color=orange(0),
-        label="Coolant",
-    )
-    plt.fill_between(
-        t,
-        top_desorption + poloidal_desorption + toroidal_desorption + coolant_desorption,
-        top_desorption
-        + poloidal_desorption
-        + toroidal_desorption
-        + coolant_desorption
-        + top_pipe_desorption,
-        color=orange(0.5),
-        label="Top pipe",
-    )
+    labels = ["Poloidal gap", "Top", "Toroidal gap", "Coolant", "Top pipe",]
+    colors = [blue(0), blue(0.2), blue(0.4), orange(0), orange(0.5),]
+    plt.stackplot(t, poloidal_desorption, top_desorption, toroidal_desorption, coolant_desorption, top_pipe_desorption, labels=labels, colors=colors)
 
 
 def get_fluxes(baking_temperature, tmax, normalised):
 
     if recomb:
         data = np.genfromtxt(
-            folder+"4mm-baking_temperature={:.0f}K/non_instant_recomb_Kr_0=3.20e-15_E_Kr=1.16e+00/derived_quantities.csv".format(baking_temperature),
+            "4mm-baking_temperature={:.0f}K/non_instant_recomb_Kr_0=3.20e-15_E_Kr=1.16e+00/derived_quantities.csv".format(baking_temperature),
             delimiter=",",
             names=True,
         )
     else:
         data = np.genfromtxt(
-            folder+"4mm-baking_temperature={:.0f}K/derived_quantities.csv".format(baking_temperature),
+            "4mm-baking_temperature={:.0f}K/derived_quantities.csv".format(baking_temperature),
             delimiter=",",
             names=True,
         )
@@ -215,22 +184,6 @@ def barchart_total_desorption(bake_temps):
 
     print(normalized_toks)
 
- 
-
-
-    # correction for 673K
-    # because the flux is so high, this correction is needed to acount for the initial step error
-    # ---> oh! no! just change the time step
-    #ind_673 = bake_temps.index(673)
-    #ind_600 = bake_temps.index(623)
-
-    #total_600 = total_toks[ind_600] + total_coolants[ind_600]
-    #total_673 = total_toks[ind_673] + total_coolants[ind_673]
-    #diff = total_600 - total_673
-
-    #total_toks[ind_673] += diff * 0.85
-    #total_coolants[ind_673] += diff * 0.25
-
     pos = np.arange(len(bake_temps))
     plt.bar(pos, total_toks, width=width, color="tab:blue", label="Vessel")
     plt.bar(
@@ -248,87 +201,31 @@ def barchart_total_desorption(bake_temps):
 
 
 def evolution_fluxes_contributions(T_baking):
-    #plt.figure()
-
-    #plot_fluxes_stacked(T_baking, tmax=1.1, contributions=False)
-    #label_fillbetween(fontsize=12)
-
-    #plt.ylim(0, 100)
-    #plt.xlim(0)
-
-    #plt.ylabel("Relative desorption (%)")
-    #plt.xlabel("Baking time (days)")
-    #plt.tight_layout()
-
-    #plt.savefig("flux_contributions_vs_time.pdf")
 
     plt.figure(figsize=(6.4 * 1.2, 4.8 * 1.2))
 
     plot_fluxes_stacked(T_baking, tmax=30, contributions=True)
-    #label_fillbetween(fontsize=10)
-    plt.legend(loc="lower right")
+    label_fillbetween(fontsize=10)
 
     plt.ylim(0, 100)
     plt.xlim(0,30)
 
-    plt.ylabel("Relative desorption (%)")
-    plt.xlabel("Baking time (days)")
-    plt.tight_layout()
-
-
-def flux_vs_time(bake_temps, min_T_colour, max_T_colour):
-    fig, axs = plt.subplots(
-        ncols=1, nrows=len(bake_temps), sharex=True, figsize=(6.4, 4.8)
-    )
-    for ax, T_baking in zip(axs, bake_temps):
-        plt.sca(ax)
-        plot_flux(
-            T_baking,
-            normalised=False,
-            color=cm.Reds((T_baking - min_T_colour) / (max_T_colour - min_T_colour)),
-        )
-        plt.ylim(
-            bottom=-plt.gca().get_ylim()[1] * 0.1,
-        )
-        plt.xlim(left=0)
-        matplotx.line_labels()
-
-    # label_fillbetween(fontsize=12)
-
-    plt.sca(axs[1])
-    plt.ylabel(
-        "Desorption \n flux (H/s) \n",
-        rotation=0,
-        verticalalignment="center",
-        horizontalalignment="right",
-    )
-    plt.sca(axs[-1])
+    matplotx.ylabel_top("Relative \n desorption (%)")
     plt.xlabel("Baking time (days)")
     plt.tight_layout()
 
 
 def plot_results():
     bake_temps = [473,498,513,538,573,598,623,673]
-    #[473,498,513,538,573,598,623,673]
-    min_T_colour, max_T_colour = min(bake_temps) - 100, max(bake_temps)
 
     # ######### area plots
 
     for T_baking in [498,623]:
         evolution_fluxes_contributions(T_baking)
         if recomb:
-            plt.title('Non instantaneous recombination {:.0f}K'.format(T_baking))
-            plt.tight_layout()
-            plt.savefig(folder+'recomb_flux_details_{:.0f}K.png'.format(T_baking),dpi=300)
+            plt.savefig(f'flux_contributions_proportion_vs_time_T={T_baking:.0f}K_noninstant_recomb.pdf')
         else:
-            plt.title('Instantaneous recombination {:.0f}K'.format(T_baking))
-            plt.tight_layout()
-            plt.savefig(folder+'baking_flux_details_{:.0f}K.png'.format(T_baking),dpi=300)
-        #plt.savefig(
-        #    folder+"flux_contributions_proportion_vs_time_T={:.0f}K.pdf".format(T_baking)
-        #)
-
-    # ######### Bar chart plot
+            plt.savefig(f'flux_contributions_proportion_vs_time_T={T_baking:.0f}K.pdf')
 
     plt.figure()
     barchart_total_desorption(bake_temps)
@@ -339,60 +236,14 @@ def plot_results():
     plt.tight_layout()
     if recomb:
         plt.title('Non instantaneous recombination')
-        plt.savefig(folder+'recomb_baking_total_desorption.png',dpi=300)
+        plt.savefig('recomb_baking_total_desorption.png',dpi=300)
     else:
         plt.title('Instantaneous recombination')
-        plt.savefig(folder+'baking_total_desorption.png',dpi=300)
-    #plt.savefig("total_desorption_over_time.pdf")
-
-    # ######### All non-normalised fluxes on 1 plot
-
-    #plt.figure(figsize=(6.4, 4.8))
-    #for T_baking in bake_temps:
-    #    plot_flux(
-    #        T_baking,
-    #        normalised=True,
-    #        color=cm.Reds(
-    #            (T_baking - min_T_colour) / (max_T_colour - min_T_colour)
-    #        ),
-    #    )
-
-    #plt.ylim(-10, 100)
-    #plt.xlim(0)
-
-    #matplotx.line_labels()
-    #matplotx.ylabel_top("Relative desorption \n flux (%)")
-    #plt.xlabel("Baking time (days)")
-    #plt.tight_layout()
-
-    #sub_bake_temps = bake_temps[1::2]
-
-    # ######### 3 non-normalised fluxes on 3 plots
-
-    #flux_vs_time(sub_bake_temps, min_T_colour, max_T_colour)
-    #plt.savefig("flux_vs_time.pdf")
-
-    # ######### 3 non-normalised fluxes on 1 plot
-    #plt.figure()
-    #for T_baking in sub_bake_temps:
-    #    plot_flux(
-    #        T_baking,
-    #        tmax=10,
-    #        normalised=False,
-    #        color=cm.Reds(
-    #            (T_baking - min_T_colour) / (max_T_colour - min_T_colour)
-    #        ),
-    #    )
-
-    #plt.xlim(0)
-
-    #matplotx.line_labels()
-    #matplotx.ylabel_top("Desorption flux (H/s)")
-    #plt.xlabel("Baking time (days)")
-    #plt.tight_layout()
+        plt.savefig('baking_total_desorption.png',dpi=300)
 
     plt.show()
 
 
 if __name__ == "__main__":
-    plot_results()
+    with plt.style.context(matplotx.styles.dufte):
+        plot_results()
