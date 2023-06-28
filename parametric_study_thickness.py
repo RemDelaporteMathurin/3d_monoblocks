@@ -62,13 +62,10 @@ def run_mb(thickness: float, instant_recomb: bool, transient: bool, gap: bool):
     else:
         folder += "/steady_state"
 
-    if instant_recomb==1:
+    if instant_recomb:
         folder += "/instant_recomb"
     else:
-        if instant_recomb==2:
-            folder += "/recomb"
-        else:
-            folder += "/no_recomb"
+        folder += "/no_recomb"
 
 
     if not gap:
